@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="buzz"
+    default="cleanup"
+    basedir="."
+>
+    <target
+        name="cleanup"
+    >
+        <delete dir="${basedir}/app/cache">
+            <include name="*"/>
+            <exclude name=".gitkeep"/>
+        </delete>
+        <delete dir="${basedir}/app/log">
+            <include name="*"/>
+            <exclude name=".gitkeep"/>
+        </delete>
+    </target>
+    <target
+        name="permissions"
+    >
+        <chmod perm="a+rw">
+            <dirset dir="${basedir}">
+                <include name="app/cache"/>
+                <include name="app/logs"/>
+            </dirset>
+        </chmod>
+    </target>
+</project>
