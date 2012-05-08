@@ -3,6 +3,7 @@
 namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Pkr\BuzzBundle\Entity\Topic
@@ -35,11 +36,22 @@ class Topic
      */
     private $description;
 
+    /**
+     * @var ArrayCollection $queries
+     *
+     * @ORM\OneToMany(targetEntity="Query", mappedBy="topic", cascade={"persist", "remove"})
+     */
+    private $queries;
+
+    public function __construct()
+    {
+        $this->queries = new ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -59,7 +71,7 @@ class Topic
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -79,10 +91,25 @@ class Topic
     /**
      * Get description
      *
-     * @return text 
+     * @return text
      */
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Get queries
+     *
+     * @return ArrayCollection
+     */
+    public function getQueries()
+    {
+        return $this->queries;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

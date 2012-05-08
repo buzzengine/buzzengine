@@ -9,9 +9,8 @@ class QueryType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder
-            ->add('value')
-        ;
+        $builder->add('topic', 'entity', array ('class' => 'PkrBuzzBundle:Topic'))
+                ->add('value');
     }
 
     public function getName()

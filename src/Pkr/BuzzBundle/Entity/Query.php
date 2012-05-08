@@ -28,11 +28,18 @@ class Query
      */
     private $value;
 
+    /**
+     * @var Topic $topic
+     *
+     * @ORM\ManyToOne(targetEntity="Topic", inversedBy="queries")
+     * @ORM\JoinColumn(name="topicId", referencedColumnName="id")
+     */
+    private $topic;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -52,10 +59,30 @@ class Query
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Set value
+     *
+     * @param Topic $topic
+     */
+    public function setTopic(Topic $topic)
+    {
+        $this->topic = $topic;
+    }
+
+    /**
+     * Get topic
+     *
+     * @return Topic
+     */
+    public function getTopic()
+    {
+        return $this->topic;
     }
 }

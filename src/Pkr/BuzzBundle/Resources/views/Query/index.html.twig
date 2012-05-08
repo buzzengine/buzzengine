@@ -1,4 +1,4 @@
-<h1>Query list</h1>
+<h1>Query list of Topic '{{ topic.name }}'</h1>
 
 <table class="records_list">
     <thead>
@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for entity in entities %}
+    {% for entity in queries %}
         <tr>
             <td><a href="{{ path('query_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.value }}</td>
@@ -30,7 +30,7 @@
 
 <ul>
     <li>
-        <a href="{{ path('query_new') }}">
+        <a href="{{ path('query_new', { 'id': topic.id }) }}">
             Create a new entry
         </a>
     </li>

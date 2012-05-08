@@ -17,18 +17,28 @@ use Pkr\BuzzBundle\Form\QueryType;
 class QueryController extends Controller
 {
     /**
-     * Lists all Query entities.
+     * Lists all Query entities of a Topic.
      *
-     * @Route("/", name="query")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="query")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('PkrBuzzBundle:Query')->findAll();
+        $topic = $em->getRepository('PkrBuzzBundle:Topic')->find($id);
 
-        return array('entities' => $entities);
+        if (!$topic)
+        {
+            throw $this->createNotFoundException('Unable to find Topic entity.');
+        }
+
+        $queries = $em->getRepository('PkrBuzzBundle:Query')->findByTopic($id);
+
+        return array (
+            'topic'   => $topic,
+            'queries' => $queries
+        );
     }
 
     /**
@@ -49,25 +59,35 @@ class QueryController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return array (
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        );
+            'delete_form' => $deleteForm->createView()
+        );
     }
 
     /**
      * Displays a form to create a new Query entity.
      *
-     * @Route("/new", name="query_new")
+     * @Route("/{id}/new", requirements={"id" = "\d+"}, name="query_new")
      * @Template()
      */
-    public function newAction()
+    public function newAction($id)
     {
-        $entity = new Query();
-        $form   = $this->createForm(new QueryType(), $entity);
+        $em = $this->getDoctrine()->getEntityManager();
+        $topic = $em->getRepository('PkrBuzzBundle:Topic')->find($id);
 
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView()
+        if (!$topic)
+        {
+            throw $this->createNotFoundException('Unable to find Topic entity.');
+        }
+
+        $query = new Query();
+        $query->setTopic($topic);
+        $form  = $this->createForm(new QueryType(), $query);
+
+        return array (
+            'topic' => $topic,
+            'form'  => $form->createView()
         );
     }
 
@@ -91,12 +111,12 @@ class QueryController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('query_show', array('id' => $entity->getId())));
-            
+
         }
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView()
+            'topic' => $entity->getTopic(),
+            'form'  => $form->createView()
         );
     }
 
@@ -189,7 +209,7 @@ class QueryController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('query'));
+        return $this->redirect($this->generateUrl('query', array('id' => $entity->getTopic()->getId())));
     }
 
     private function createDeleteForm($id)
