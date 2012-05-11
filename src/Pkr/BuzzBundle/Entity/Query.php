@@ -3,6 +3,7 @@
 namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Pkr\BuzzBundle\Entity\Query
@@ -25,6 +26,8 @@ class Query
      * @var string $value
      *
      * @ORM\Column(name="value", type="string", length=90)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(90)
      */
     private $value;
 

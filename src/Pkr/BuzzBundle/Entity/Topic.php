@@ -4,6 +4,7 @@ namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Pkr\BuzzBundle\Entity\Topic
@@ -26,6 +27,8 @@ class Topic
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=90)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(90)
      */
     private $name;
 
