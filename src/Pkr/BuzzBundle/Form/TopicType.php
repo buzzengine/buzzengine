@@ -10,7 +10,12 @@ class TopicType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name')
-                ->add('description', 'textarea', array ('required' => false));
+                ->add('description', null, array ('required' => false))
+                ->add('categories', 'entity', array (
+                    'class'     => 'PkrBuzzBundle:Category',
+                    'expanded'  => true,
+                    'multiple'  => true
+                ));
     }
 
     public function getName()

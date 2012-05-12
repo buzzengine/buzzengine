@@ -36,6 +36,8 @@ class Query
      *
      * @ORM\ManyToOne(targetEntity="Topic", inversedBy="queries")
      * @ORM\JoinColumn(name="topicId", referencedColumnName="id")
+     * @Assert\NotNull()
+     * @Assert\Type(type="Pkr\BuzzBundle\Entity\Topic")
      */
     private $topic;
 
