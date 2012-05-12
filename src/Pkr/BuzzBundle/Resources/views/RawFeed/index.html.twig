@@ -1,4 +1,4 @@
-<h1>RawFeed list</h1>
+<h1>RawFeed list of Category '{{ category.name }}'</h1>
 
 <table class="records_list">
     <thead>
@@ -9,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for entity in entities %}
+    {% for entity in rawFeeds %}
         <tr>
             <td><a href="{{ path('rawfeed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.url }}</td>
@@ -30,7 +30,7 @@
 
 <ul>
     <li>
-        <a href="{{ path('rawfeed_new') }}">
+        <a href="{{ path('rawfeed_new', { 'id': category.id }) }}">
             Create a new entry
         </a>
     </li>

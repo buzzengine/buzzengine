@@ -19,7 +19,7 @@ class QueryController extends Controller
     /**
      * Lists all Query entities of a Topic.
      *
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="query")
+     * @Route("/topic/{id}", name="query")
      * @Template()
      */
     public function indexAction($id)
@@ -68,7 +68,7 @@ class QueryController extends Controller
     /**
      * Displays a form to create a new Query entity.
      *
-     * @Route("/{id}/new", requirements={"id" = "\d+"}, name="query_new")
+     * @Route("/new/topic/{id}", name="query_new")
      * @Template()
      */
     public function newAction($id)
@@ -86,8 +86,8 @@ class QueryController extends Controller
         $form  = $this->createForm(new QueryType(), $query);
 
         return array (
-            'topic' => $topic,
-            'form'  => $form->createView()
+            'entity' => $query,
+            'form'   => $form->createView()
         );
     }
 
@@ -115,8 +115,8 @@ class QueryController extends Controller
         }
 
         return array(
-            'topic' => $entity->getTopic(),
-            'form'  => $form->createView()
+            'entity' => $entity,
+            'form'   => $form->createView()
         );
     }
 

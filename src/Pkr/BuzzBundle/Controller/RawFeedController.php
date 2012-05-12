@@ -12,23 +12,33 @@ use Pkr\BuzzBundle\Form\RawFeedType;
 /**
  * RawFeed controller.
  *
- * @Route("/rawfeed")
+ * @Route("/raw-feed")
  */
 class RawFeedController extends Controller
 {
     /**
      * Lists all RawFeed entities.
      *
-     * @Route("/", name="rawfeed")
+     * @Route("/category/{id}", name="rawfeed")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('PkrBuzzBundle:RawFeed')->findAll();
+        $category = $em->getRepository('PkrBuzzBundle:Category')->find($id);
 
-        return array('entities' => $entities);
+        if (!$category)
+        {
+            throw $this->createNotFoundException('Unable to find Category entity.');
+        }
+
+        $rawFeeds = $em->getRepository('PkrBuzzBundle:RawFeed')->findByCategory($id);
+
+        return array (
+            'category' => $category,
+            'rawFeeds' => $rawFeeds
+        );
     }
 
     /**
@@ -49,24 +59,34 @@ class RawFeedController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return array (
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        );
+            'delete_form' => $deleteForm->createView()
+        );
     }
 
     /**
      * Displays a form to create a new RawFeed entity.
      *
-     * @Route("/new", name="rawfeed_new")
+     * @Route("/new/category/{id}", name="rawfeed_new")
      * @Template()
      */
-    public function newAction()
+    public function newAction($id)
     {
-        $entity = new RawFeed();
-        $form   = $this->createForm(new RawFeedType(), $entity);
+        $em = $this->getDoctrine()->getEntityManager();
+        $category = $em->getRepository('PkrBuzzBundle:Category')->find($id);
 
-        return array(
-            'entity' => $entity,
+        if (!$category)
+        {
+            throw $this->createNotFoundException('Unable to find Category entity.');
+        }
+
+        $rawFeed = new RawFeed();
+        $rawFeed->setCategory($category);
+        $form   = $this->createForm(new RawFeedType(), $rawFeed);
+
+        return array (
+            'entity' => $rawFeed,
             'form'   => $form->createView()
         );
     }
@@ -91,7 +111,7 @@ class RawFeedController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('rawfeed_show', array('id' => $entity->getId())));
-            
+
         }
 
         return array(
@@ -189,7 +209,7 @@ class RawFeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('rawfeed'));
+        return $this->redirect($this->generateUrl('rawfeed', array('id' => $entity->getCategory()->getId())));
     }
 
     private function createDeleteForm($id)
