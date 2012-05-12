@@ -57,10 +57,18 @@ class Topic
      */
     private $queries;
 
+    /**
+     * @var ArrayCollection $feeds
+     *
+     * @ORM\OneToMany(targetEntity="Feed", mappedBy="topic", cascade={"persist", "remove"})
+     */
+    private $feeds;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->queries = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
     }
 
     /**
@@ -141,6 +149,16 @@ class Topic
     public function getQueries()
     {
         return $this->queries;
+    }
+
+    /**
+     * Get feeds
+     *
+     * @return ArrayCollection
+     */
+    public function getFeeds()
+    {
+        return $this->feeds;
     }
 
     public function __toString()
