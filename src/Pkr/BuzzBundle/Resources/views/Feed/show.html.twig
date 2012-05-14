@@ -12,7 +12,7 @@
         </tr>
         <tr>
             <th>Disabled</th>
-            <td>{{ entity.disabled }}</td>
+            <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
         </tr>
     </tbody>
 </table>

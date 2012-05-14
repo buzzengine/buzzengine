@@ -3,6 +3,7 @@
 namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -10,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\QueryRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Query
 {
@@ -32,6 +34,14 @@ class Query
     private $value;
 
     /**
+     * @var boolean $disabled
+     *
+     * @ORM\Column(name="disabled", type="boolean")
+     * @Assert\NotNull()
+     */
+    private $disabled = false;
+
+    /**
      * @var Topic $topic
      *
      * @ORM\ManyToOne(targetEntity="Topic", inversedBy="queries")
@@ -40,6 +50,29 @@ class Query
      * @Assert\Type(type="Pkr\BuzzBundle\Entity\Topic")
      */
     private $topic;
+
+    /**
+     * @var ArrayCollection $feeds
+     *
+     * @ORM\OneToMany(targetEntity="Feed", mappedBy="query", cascade={"persist"})
+     */
+    private $feeds;
+
+    public function __construct()
+    {
+        $this->feeds = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function preRemove()
+    {
+        foreach ($this->feeds as $feed)
+        {
+            $feed->detachFromQuery();
+        }
+    }
 
     /**
      * Get id
@@ -72,6 +105,26 @@ class Query
     }
 
     /**
+     * Set disabled
+     *
+     * @param boolean $disabled
+     */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+    }
+
+    /**
+     * Get disabled
+     *
+     * @return boolean
+     */
+    public function getDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
      * Set value
      *
      * @param Topic $topic
@@ -89,5 +142,15 @@ class Query
     public function getTopic()
     {
         return $this->topic;
+    }
+
+    /**
+     * Get feeds
+     *
+     * @return ArrayCollection
+     */
+    public function getFeeds()
+    {
+        return $this->feeds;
     }
 }

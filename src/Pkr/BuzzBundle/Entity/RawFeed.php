@@ -3,6 +3,7 @@
 namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -10,9 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\RawFeedRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class RawFeed
 {
+    const PLACEHOLDER = '*QUERY*';
+
     /**
      * @var integer $id
      *
@@ -29,6 +33,11 @@ class RawFeed
      * @Assert\NotBlank()
      * @Assert\MaxLength(255)
      * @Assert\Url()
+     * @Assert\Regex(
+     *      pattern = "~\*QUERY\*~",
+     *      match   = true,
+     *      message = "'*QUERY*' placeholder missing"
+     * )
      */
     private $url;
 
@@ -41,6 +50,34 @@ class RawFeed
      * @Assert\Type(type="Pkr\BuzzBundle\Entity\Category")
      */
     private $category;
+
+    /**
+     * @var ArrayCollection $feeds
+     *
+     * @ORM\OneToMany(targetEntity="Feed", mappedBy="rawFeed", cascade={"persist"})
+     */
+    private $feeds;
+
+    public function __construct()
+    {
+        $this->feeds = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function preRemove()
+    {
+        foreach ($this->feeds as $feed)
+        {
+            $feed->detachFromRawFeed();
+        }
+    }
+
+    public function getFeedUrl(Query $query)
+    {
+        return str_replace(self::PLACEHOLDER, $query->getValue(), $this->url);
+    }
 
     /**
      * Get id
@@ -90,5 +127,15 @@ class RawFeed
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Get feeds
+     *
+     * @return ArrayCollection
+     */
+    public function getFeeds()
+    {
+        return $this->feeds;
     }
 }

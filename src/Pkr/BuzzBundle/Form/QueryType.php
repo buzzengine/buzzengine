@@ -10,7 +10,8 @@ class QueryType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('topic')
-                ->add('value');
+                ->add('value')
+                ->add('disabled', null, array ('required' => false));
     }
 
     public function getName()

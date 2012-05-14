@@ -14,7 +14,7 @@
         <tr>
             <td><a href="{{ path('feed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.url }}</td>
-            <td>{{ entity.disabled }}</td>
+            <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
             <td>
                 <ul>
                     <li>

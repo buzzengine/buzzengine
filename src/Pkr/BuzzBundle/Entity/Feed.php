@@ -51,6 +51,47 @@ class Feed
     private $topic;
 
     /**
+     * @var RawFeed $rawFeed
+     *
+     * @ORM\ManyToOne(targetEntity="RawFeed", inversedBy="feeds")
+     * @ORM\JoinColumn(name="rawFeedId", referencedColumnName="id")
+     * @Assert\Type(type="Pkr\BuzzBundle\Entity\RawFeed")
+     */
+    private $rawFeed;
+
+    /**
+     * @var Query $query
+     *
+     * @ORM\ManyToOne(targetEntity="Query", inversedBy="feeds")
+     * @ORM\JoinColumn(name="queryId", referencedColumnName="id")
+     * @Assert\Type(type="Pkr\BuzzBundle\Entity\Query")
+     */
+    private $query;
+
+    public function __construct($rawFeed = null, $query = null)
+    {
+        if (!(is_null($rawFeed) && is_null($query)))
+        {
+            $this->rawFeed = $rawFeed;
+            $this->query = $query;
+
+            $this->url = $rawFeed->getFeedUrl($query);
+        }
+    }
+
+    public function detachFromRawFeed()
+    {
+        $this->rawFeed = null;
+        $this->disabled = true;
+    }
+
+    public function detachFromQuery()
+    {
+        $this->query = null;
+        $this->disabled = true;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -101,7 +142,7 @@ class Feed
     }
 
     /**
-     * Set value
+     * Set topic
      *
      * @param Topic $topic
      */
@@ -118,5 +159,45 @@ class Feed
     public function getTopic()
     {
         return $this->topic;
+    }
+
+    /**
+     * Set rawFeed
+     *
+     * @param RawFeed $rawFeed
+     */
+    public function setRawFeed(RawFeed $rawFeed)
+    {
+        $this->rawFeed = $rawFeed;
+    }
+
+    /**
+     * Get rawFeed
+     *
+     * @return RawFeed
+     */
+    public function getRawFeed()
+    {
+        return $this->rawFeed;
+    }
+
+    /**
+     * Set query
+     *
+     * @param Query $query
+     */
+    public function setQuery(Query $query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Get query
+     *
+     * @return Query
+     */
+    public function getQuery()
+    {
+        return $this->query;
     }
 }
