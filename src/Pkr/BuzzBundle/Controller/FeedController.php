@@ -208,7 +208,7 @@ class FeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('feed'));
+        return $this->redirect($this->generateUrl('feed', array('id' => $entity->getTopic()->getId())));
     }
 
     private function createDeleteForm($id)

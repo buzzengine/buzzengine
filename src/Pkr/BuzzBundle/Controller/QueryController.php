@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Pkr\BuzzBundle\Entity\Feed;
 use Pkr\BuzzBundle\Entity\Query;
 use Pkr\BuzzBundle\Form\QueryType;
 
@@ -107,6 +108,16 @@ class QueryController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
+
+            foreach ($entity->getTopic()->getCategories() as $category)
+            {
+                foreach ($category->getRawFeeds() as $rawFeed)
+                {
+                    $feed = new Feed($rawFeed, $entity);
+                    $em->persist($feed);
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -170,7 +181,15 @@ class QueryController extends Controller
 
         $editForm->bindRequest($request);
 
-        if ($editForm->isValid()) {
+        if ($editForm->isValid())
+        {
+            foreach ($entity->getFeeds() as $feed)
+            {
+                $feed->setDisabled($entity->getDisabled());
+                $feed->generateUrl();
+                $em->persist($feed);
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -203,6 +222,12 @@ class QueryController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Query entity.');
+            }
+
+            foreach ($entity->getFeeds() as $feed)
+            {
+                $feed->detachFromQuery();
+                $feed->setDisabled(true);
             }
 
             $em->remove($entity);

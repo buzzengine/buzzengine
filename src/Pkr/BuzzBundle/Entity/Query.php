@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\QueryRepository")
- * @ORM\HasLifecycleCallbacks()
  */
 class Query
 {
@@ -61,17 +60,6 @@ class Query
     public function __construct()
     {
         $this->feeds = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\PreRemove
-     */
-    public function preRemove()
-    {
-        foreach ($this->feeds as $feed)
-        {
-            $feed->detachFromQuery();
-        }
     }
 
     /**

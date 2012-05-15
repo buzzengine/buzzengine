@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Pkr\BuzzBundle\Entity\Feed;
 use Pkr\BuzzBundle\Entity\RawFeed;
 use Pkr\BuzzBundle\Form\RawFeedType;
 
@@ -107,6 +108,16 @@ class RawFeedController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
+
+            foreach ($entity->getCategory()->getTopics() as $topic)
+            {
+                foreach ($topic->getQueries() as $query)
+                {
+                    $feed = new Feed($entity, $query);
+                    $em->persist($feed);
+                }
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -170,7 +181,14 @@ class RawFeedController extends Controller
 
         $editForm->bindRequest($request);
 
-        if ($editForm->isValid()) {
+        if ($editForm->isValid())
+        {
+            foreach ($entity->getFeeds() as $feed)
+            {
+                $feed->generateUrl();
+                $em->persist($feed);
+            }
+
             $em->persist($entity);
             $em->flush();
 
@@ -203,6 +221,12 @@ class RawFeedController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find RawFeed entity.');
+            }
+
+            foreach ($entity->getFeeds() as $feed)
+            {
+                $feed->detachFromRawFeed();
+                $feed->setDisabled(true);
             }
 
             $em->remove($entity);

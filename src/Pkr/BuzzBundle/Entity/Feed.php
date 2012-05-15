@@ -70,25 +70,33 @@ class Feed
 
     public function __construct($rawFeed = null, $query = null)
     {
-        if (!(is_null($rawFeed) && is_null($query)))
+        if (!(is_null($rawFeed) || is_null($query)))
         {
             $this->rawFeed = $rawFeed;
             $this->query = $query;
+            $this->topic = $query->getTopic();
+            $this->disabled = $query->getDisabled();
 
-            $this->url = $rawFeed->getFeedUrl($query);
+            $this->generateUrl();
+        }
+    }
+
+    public function generateUrl()
+    {
+        if (!(is_null($this->rawFeed) || is_null($this->query)))
+        {
+            $this->url = $this->rawFeed->getFeedUrl($this->query);
         }
     }
 
     public function detachFromRawFeed()
     {
         $this->rawFeed = null;
-        $this->disabled = true;
     }
 
     public function detachFromQuery()
     {
         $this->query = null;
-        $this->disabled = true;
     }
 
     /**
