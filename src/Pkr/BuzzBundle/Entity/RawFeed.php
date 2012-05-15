@@ -64,7 +64,7 @@ class RawFeed
 
     public function getFeedUrl(Query $query)
     {
-        return str_replace(self::PLACEHOLDER, $query->getValue(), $this->url);
+        return str_replace(self::PLACEHOLDER, urlencode($query->getValue()), $this->url);
     }
 
     /**
