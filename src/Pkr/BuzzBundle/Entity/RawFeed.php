@@ -51,15 +51,15 @@ class RawFeed
     private $category;
 
     /**
-     * @var ArrayCollection $feeds
+     * @var ArrayCollection $topicFeeds
      *
-     * @ORM\OneToMany(targetEntity="Feed", mappedBy="rawFeed", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TopicFeed", mappedBy="rawFeed", cascade={"persist"})
      */
-    private $feeds;
+    private $topicFeeds;
 
     public function __construct()
     {
-        $this->feeds = new ArrayCollection();
+        $this->topicFeeds = new ArrayCollection();
     }
 
     public function getFeedUrl(Query $query)
@@ -118,12 +118,12 @@ class RawFeed
     }
 
     /**
-     * Get feeds
+     * Get topicFeeds
      *
      * @return ArrayCollection
      */
-    public function getFeeds()
+    public function getTopicFeeds()
     {
-        return $this->feeds;
+        return $this->topicFeeds;
     }
 }

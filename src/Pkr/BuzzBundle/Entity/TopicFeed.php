@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Pkr\BuzzBundle\Entity\Feed
+ * Pkr\BuzzBundle\Entity\TopicFeed
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\FeedRepository")
+ * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\TopicFeedRepository")
  */
-class Feed
+class TopicFeed
 {
     /**
      * @var integer $id
@@ -53,7 +53,7 @@ class Feed
     /**
      * @var RawFeed $rawFeed
      *
-     * @ORM\ManyToOne(targetEntity="RawFeed", inversedBy="feeds")
+     * @ORM\ManyToOne(targetEntity="RawFeed", inversedBy="topicFeeds")
      * @ORM\JoinColumn(name="rawFeedId", referencedColumnName="id")
      * @Assert\Type(type="Pkr\BuzzBundle\Entity\RawFeed")
      */
@@ -62,7 +62,7 @@ class Feed
     /**
      * @var Query $query
      *
-     * @ORM\ManyToOne(targetEntity="Query", inversedBy="feeds")
+     * @ORM\ManyToOne(targetEntity="Query", inversedBy="topicFeeds")
      * @ORM\JoinColumn(name="queryId", referencedColumnName="id")
      * @Assert\Type(type="Pkr\BuzzBundle\Entity\Query")
      */

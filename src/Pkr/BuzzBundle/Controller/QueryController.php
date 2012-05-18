@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pkr\BuzzBundle\Entity\Feed;
+use Pkr\BuzzBundle\Entity\TopicFeed;
 use Pkr\BuzzBundle\Entity\Query;
 use Pkr\BuzzBundle\Form\QueryType;
 
@@ -113,7 +113,7 @@ class QueryController extends Controller
             {
                 foreach ($category->getRawFeeds() as $rawFeed)
                 {
-                    $feed = new Feed($rawFeed, $entity);
+                    $feed = new TopicFeed($rawFeed, $entity);
                     $em->persist($feed);
                 }
             }
@@ -183,7 +183,7 @@ class QueryController extends Controller
 
         if ($editForm->isValid())
         {
-            foreach ($entity->getFeeds() as $feed)
+            foreach ($entity->getTopicFeeds() as $feed)
             {
                 $feed->setDisabled($entity->getDisabled());
                 $feed->generateUrl();
@@ -224,7 +224,7 @@ class QueryController extends Controller
                 throw $this->createNotFoundException('Unable to find Query entity.');
             }
 
-            foreach ($entity->getFeeds() as $feed)
+            foreach ($entity->getTopicFeeds() as $feed)
             {
                 $feed->detachFromQuery();
                 $feed->setDisabled(true);

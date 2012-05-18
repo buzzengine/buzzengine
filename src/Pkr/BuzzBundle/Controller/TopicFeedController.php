@@ -6,20 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pkr\BuzzBundle\Entity\Feed;
-use Pkr\BuzzBundle\Form\FeedType;
+use Pkr\BuzzBundle\Entity\TopicFeed;
+use Pkr\BuzzBundle\Form\TopicFeedType;
 
 /**
  * Feed controller.
  *
- * @Route("/feed")
+ * @Route("/topic-feed")
  */
-class FeedController extends Controller
+class TopicFeedController extends Controller
 {
     /**
      * Lists all Feed entities.
      *
-     * @Route("/topic/{id}", name="feed")
+     * @Route("/topic/{id}", name="topicFeed")
      * @Template()
      */
     public function indexAction($id)
@@ -33,25 +33,25 @@ class FeedController extends Controller
             throw $this->createNotFoundException('Unable to find Topic entity.');
         }
 
-        $feeds = $em->getRepository('PkrBuzzBundle:Feed')->findByTopic($id);
+        $topicFeeds = $em->getRepository('PkrBuzzBundle:TopicFeed')->findByTopic($id);
 
         return array (
-            'topic' => $topic,
-            'feeds' => $feeds
+            'topic'      => $topic,
+            'topicFeeds' => $topicFeeds
         );
     }
 
     /**
      * Finds and displays a Feed entity.
      *
-     * @Route("/{id}/show", name="feed_show")
+     * @Route("/{id}/show", name="topicFeed_show")
      * @Template()
      */
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PkrBuzzBundle:Feed')->find($id);
+        $entity = $em->getRepository('PkrBuzzBundle:TopicFeed')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Feed entity.');
@@ -61,13 +61,14 @@ class FeedController extends Controller
 
         return array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        );
+            'delete_form' => $deleteForm->createView()
+        );
     }
 
     /**
      * Displays a form to create a new Feed entity.
      *
-     * @Route("/new/topic/{id}", name="feed_new")
+     * @Route("/new/topic/{id}", name="topicFeed_new")
      * @Template()
      */
     public function newAction($id)
@@ -80,12 +81,12 @@ class FeedController extends Controller
             throw $this->createNotFoundException('Unable to find Topic entity.');
         }
 
-        $feed = new Feed();
-        $feed->setTopic($topic);
-        $form   = $this->createForm(new FeedType(), $feed);
+        $topicFeed = new TopicFeed();
+        $topicFeed->setTopic($topic);
+        $form   = $this->createForm(new TopicFeedType(), $topicFeed);
 
-        return array(
-            'entity' => $feed,
+        return array (
+            'entity' => $topicFeed,
             'form'   => $form->createView()
         );
     }
@@ -93,9 +94,9 @@ class FeedController extends Controller
     /**
      * Creates a new Feed entity.
      *
-     * @Route("/create", name="feed_create")
+     * @Route("/create", name="topicFeed_create")
      * @Method("post")
-     * @Template("PkrBuzzBundle:Feed:new.html.twig")
+     * @Template("PkrBuzzBundle:TopicFeed:new.html.twig")
      */
     public function createAction()
     {
@@ -109,7 +110,7 @@ class FeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('feed_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('topicFeed_show', array('id' => $entity->getId())));
 
         }
 
@@ -122,20 +123,20 @@ class FeedController extends Controller
     /**
      * Displays a form to edit an existing Feed entity.
      *
-     * @Route("/{id}/edit", name="feed_edit")
+     * @Route("/{id}/edit", name="topicFeed_edit")
      * @Template()
      */
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PkrBuzzBundle:Feed')->find($id);
+        $entity = $em->getRepository('PkrBuzzBundle:TopicFeed')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Feed entity.');
         }
 
-        $editForm = $this->createForm(new FeedType(), $entity);
+        $editForm = $this->createForm(new TopicFeedType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -148,21 +149,21 @@ class FeedController extends Controller
     /**
      * Edits an existing Feed entity.
      *
-     * @Route("/{id}/update", name="feed_update")
+     * @Route("/{id}/update", name="topicFeed_update")
      * @Method("post")
-     * @Template("PkrBuzzBundle:Feed:edit.html.twig")
+     * @Template("PkrBuzzBundle:TopicFeed:edit.html.twig")
      */
     public function updateAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('PkrBuzzBundle:Feed')->find($id);
+        $entity = $em->getRepository('PkrBuzzBundle:TopicFeed')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Feed entity.');
         }
 
-        $editForm   = $this->createForm(new FeedType(), $entity);
+        $editForm   = $this->createForm(new TopicFeedType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -173,7 +174,7 @@ class FeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('feed_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('topicFeed_edit', array('id' => $id)));
         }
 
         return array(
@@ -186,7 +187,7 @@ class FeedController extends Controller
     /**
      * Deletes a Feed entity.
      *
-     * @Route("/{id}/delete", name="feed_delete")
+     * @Route("/{id}/delete", name="topicFeed_delete")
      * @Method("post")
      */
     public function deleteAction($id)
@@ -198,7 +199,7 @@ class FeedController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('PkrBuzzBundle:Feed')->find($id);
+            $entity = $em->getRepository('PkrBuzzBundle:TopicFeed')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Feed entity.');
@@ -208,7 +209,7 @@ class FeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('feed', array('id' => $entity->getTopic()->getId())));
+        return $this->redirect($this->generateUrl('topicFeed', array('id' => $entity->getTopic()->getId())));
     }
 
     private function createDeleteForm($id)

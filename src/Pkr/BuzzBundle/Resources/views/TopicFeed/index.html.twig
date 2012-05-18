@@ -1,4 +1,4 @@
-<h1>Feed list of Topic '{{ topic.name }}'</h1>
+<h1>TopicFeed list of Topic '{{ topic.name }}'</h1>
 
 <table class="records_list">
     <thead>
@@ -10,18 +10,18 @@
         </tr>
     </thead>
     <tbody>
-    {% for entity in feeds %}
+    {% for entity in topicFeeds %}
         <tr>
-            <td><a href="{{ path('feed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td><a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.url }}</td>
             <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
             <td>
                 <ul>
                     <li>
-                        <a href="{{ path('feed_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">show</a>
                     </li>
                     <li>
-                        <a href="{{ path('feed_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('topicFeed_edit', { 'id': entity.id }) }}">edit</a>
                     </li>
                 </ul>
             </td>
@@ -32,7 +32,7 @@
 
 <ul>
     <li>
-        <a href="{{ path('feed_new', { 'id': topic.id }) }}">
+        <a href="{{ path('topicFeed_new', { 'id': topic.id }) }}">
             Create a new entry
         </a>
     </li>

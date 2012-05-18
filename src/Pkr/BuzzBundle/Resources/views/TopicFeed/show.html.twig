@@ -1,4 +1,4 @@
-<h1>Feed</h1>
+<h1>TopicFeed</h1>
 
 <table class="record_properties">
     <tbody>
@@ -19,17 +19,17 @@
 
 <ul class="record_actions">
     <li>
-        <a href="{{ path('feed', { 'id': entity.topic.id }) }}">
+        <a href="{{ path('topicFeed', { 'id': entity.topic.id }) }}">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('feed_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('topicFeed_edit', { 'id': entity.id }) }}">
             Edit
         </a>
     </li>
     <li>
-        <form action="{{ path('feed_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('topicFeed_delete', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>
         </form>

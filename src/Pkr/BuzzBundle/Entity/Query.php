@@ -51,15 +51,15 @@ class Query
     private $topic;
 
     /**
-     * @var ArrayCollection $feeds
+     * @var ArrayCollection $topicFeeds
      *
-     * @ORM\OneToMany(targetEntity="Feed", mappedBy="query", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TopicFeed", mappedBy="query", cascade={"persist"})
      */
-    private $feeds;
+    private $topicFeeds;
 
     public function __construct()
     {
-        $this->feeds = new ArrayCollection();
+        $this->topicFeeds = new ArrayCollection();
     }
 
     /**
@@ -133,12 +133,12 @@ class Query
     }
 
     /**
-     * Get feeds
+     * Get topicFeeds
      *
      * @return ArrayCollection
      */
-    public function getFeeds()
+    public function getTopicFeeds()
     {
-        return $this->feeds;
+        return $this->topicFeeds;
     }
 }

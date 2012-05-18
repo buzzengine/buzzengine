@@ -58,17 +58,17 @@ class Topic
     private $queries;
 
     /**
-     * @var ArrayCollection $feeds
+     * @var ArrayCollection $topicFeeds
      *
-     * @ORM\OneToMany(targetEntity="Feed", mappedBy="topic", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TopicFeed", mappedBy="topic", cascade={"persist", "remove"})
      */
-    private $feeds;
+    private $topicFeeds;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->queries = new ArrayCollection();
-        $this->feeds = new ArrayCollection();
+        $this->topicFeeds = new ArrayCollection();
     }
 
     /**
@@ -152,13 +152,13 @@ class Topic
     }
 
     /**
-     * Get feeds
+     * Get topicFeeds
      *
      * @return ArrayCollection
      */
-    public function getFeeds()
+    public function getTopicFeeds()
     {
-        return $this->feeds;
+        return $this->topicFeeds;
     }
 
     public function __toString()
