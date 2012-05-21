@@ -40,6 +40,13 @@ class Category
     private $topics;
 
     /**
+     * @var ArrayCollection $feeds
+     *
+     * @ORM\OneToMany(targetEntity="Feed", mappedBy="category", cascade={"persist", "remove"})
+     */
+    private $feeds;
+
+    /**
      * @var ArrayCollection $rawFeeds
      *
      * @ORM\OneToMany(targetEntity="RawFeed", mappedBy="category", cascade={"persist", "remove"})
@@ -49,6 +56,7 @@ class Category
     public function __construct()
     {
         $this->topics = new ArrayCollection();
+        $this->feeds = new ArrayCollection();
         $this->rawFeeds = new ArrayCollection();
     }
 
@@ -90,6 +98,16 @@ class Category
     public function getTopics()
     {
         return $this->topics;
+    }
+
+    /**
+     * Get feeds
+     *
+     * @return ArrayCollection
+     */
+    public function getFeeds()
+    {
+        return $this->feeds;
     }
 
     /**
