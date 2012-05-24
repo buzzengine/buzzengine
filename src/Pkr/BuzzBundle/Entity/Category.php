@@ -5,12 +5,14 @@ namespace Pkr\BuzzBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Pkr\BuzzBundle\Entity\Category
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\CategoryRepository")
+ * @DoctrineAssert\UniqueEntity(fields="name")
  */
 class Category
 {

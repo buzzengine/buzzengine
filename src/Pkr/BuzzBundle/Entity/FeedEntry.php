@@ -3,12 +3,16 @@
 namespace Pkr\BuzzBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Pkr\BuzzBundle\Entity\FeedEntry
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\FeedEntryRepository")
+ * @DoctrineAssert\UniqueEntity(fields={"title", "domain"})
  */
 class FeedEntry
 {
@@ -25,15 +29,10 @@ class FeedEntry
      * @var string $title
      *
      * @ORM\Column(name="title", type="string", length=90)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(90)
      */
     private $title;
-
-    /**
-     * @var array $authors
-     *
-     * @ORM\Column(name="authors", type="array")
-     */
-    private $authors;
 
     /**
      * @var text $description
@@ -46,6 +45,7 @@ class FeedEntry
      * @var text $content
      *
      * @ORM\Column(name="content", type="text")
+     * @Assert\NotBlank()
      */
     private $content;
 
@@ -64,19 +64,37 @@ class FeedEntry
     private $dateModified;
 
     /**
-     * @var string $permalink
-     *
-     * @ORM\Column(name="permalink", type="string", length=255)
-     */
-    private $permalink;
-
-    /**
      * @var array $links
      *
-     * @ORM\Column(name="links", type="array")
+     * @ORM\Column(name="links", type="array", nullable=true)
      */
     private $links;
 
+    /**
+     * @var Domain $domain
+     *
+     * @ORM\ManyToOne(targetEntity="Domain", inversedBy="feedEntries")
+     * @ORM\JoinColumn(name="domainId", referencedColumnName="id")
+     * @Assert\NotNull()
+     * @Assert\Type(type="Pkr\BuzzBundle\Entity\Domain")
+     */
+    private $domain;
+
+    /**
+     * @var ArrayCollection $authors
+     *
+     * @ORM\ManyToMany(targetEntity="Author", inversedBy="feedEntries")
+     * @ORM\JoinTable(name="FeedEntryAuthor",
+     *      joinColumns={@ORM\JoinColumn(name="feedEntryId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="authorId", referencedColumnName="id")}
+     * )
+     */
+    private $authors;
+
+    public function __construct()
+    {
+        $this->authors = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -106,26 +124,6 @@ class FeedEntry
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Set authors
-     *
-     * @param array $authors
-     */
-    public function setAuthors($authors)
-    {
-        $this->authors = $authors;
-    }
-
-    /**
-     * Get authors
-     *
-     * @return array
-     */
-    public function getAuthors()
-    {
-        return $this->authors;
     }
 
     /**
@@ -171,9 +169,9 @@ class FeedEntry
     /**
      * Set dateCreated
      *
-     * @param datetime $dateCreated
+     * @param DateTime $dateCreated
      */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated(\DateTime $dateCreated)
     {
         $this->dateCreated = $dateCreated;
     }
@@ -181,7 +179,7 @@ class FeedEntry
     /**
      * Get dateCreated
      *
-     * @return datetime
+     * @return DateTime
      */
     public function getDateCreated()
     {
@@ -191,9 +189,9 @@ class FeedEntry
     /**
      * Set dateModified
      *
-     * @param datetime $dateModified
+     * @param DateTime $dateModified
      */
-    public function setDateModified($dateModified)
+    public function setDateModified(\DateTime $dateModified)
     {
         $this->dateModified = $dateModified;
     }
@@ -201,31 +199,11 @@ class FeedEntry
     /**
      * Get dateModified
      *
-     * @return datetime
+     * @return DateTime
      */
     public function getDateModified()
     {
         return $this->dateModified;
-    }
-
-    /**
-     * Set permalink
-     *
-     * @param string $permalink
-     */
-    public function setPermalink($permalink)
-    {
-        $this->permalink = $permalink;
-    }
-
-    /**
-     * Get permalink
-     *
-     * @return string
-     */
-    public function getPermalink()
-    {
-        return $this->permalink;
     }
 
     /**
@@ -246,5 +224,45 @@ class FeedEntry
     public function getLinks()
     {
         return $this->links;
+    }
+
+    /**
+     * Set domain
+     *
+     * @param Domain $domain
+     */
+    public function setDomain(Domain $domain)
+    {
+        $this->domain = $domain;
+    }
+
+    /**
+     * Get domain
+     *
+     * @return Domain
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * Set authors
+     *
+     * @param ArrayCollection $authors
+     */
+    public function setAuthors(ArrayCollection $authors)
+    {
+        $this->authors = $authors;
+    }
+
+    /**
+     * Get authors
+     *
+     * @return ArrayCollection
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 }

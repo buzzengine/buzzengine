@@ -5,12 +5,14 @@ namespace Pkr\BuzzBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Pkr\BuzzBundle\Entity\Topic
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Pkr\BuzzBundle\Entity\TopicRepository")
+ * @DoctrineAssert\UniqueEntity(fields="name")
  */
 class Topic
 {
@@ -64,9 +66,25 @@ class Topic
      */
     private $topicFeeds;
 
+    /**
+     * @var ArrayCollection $domains
+     *
+     * @ORM\OneToMany(targetEntity="Domain", mappedBy="topic", cascade={"persist", "remove"})
+     */
+    private $domains;
+
+    /**
+     * @var ArrayCollection $authors
+     *
+     * @ORM\OneToMany(targetEntity="Author", mappedBy="topic", cascade={"persist", "remove"})
+     */
+    private $authors;
+
     public function __construct()
     {
+        $this->authors = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->domains = new ArrayCollection();
         $this->queries = new ArrayCollection();
         $this->topicFeeds = new ArrayCollection();
     }
@@ -159,6 +177,26 @@ class Topic
     public function getTopicFeeds()
     {
         return $this->topicFeeds;
+    }
+
+    /**
+     * Get domains
+     *
+     * @return ArrayCollection
+     */
+    public function getDomains()
+    {
+        return $this->domains;
+    }
+
+    /**
+     * Get authors
+     *
+     * @return ArrayCollection
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 
     public function __toString()
