@@ -6,16 +6,15 @@ use Zend\Feed\Reader\Entry;
 
 class Query implements FilterInterface
 {
-    protected $_pattern = null;
+    protected $_patterns = array ();
 
-    public function __construct($value)
+    public function addQuery($value)
     {
-        $this->setQuery($value);
-    }
-
-    public function setQuery($value)
-    {
-        # ~-?"[^"\f\n\r\t\v]+"|-?\S+~i oder ~-?"[^"]+"|-?\S+~i
+        /*
+         * ~-?"[^"\f\n\r\t\v]+"|-?\S+~i oder ~-?"[^"]+"|-?\S+~i
+         *
+         * ~(?=.*JavaScript)(?=.*jQuery)(?!.*php)~
+         */
 
         $matches = null;
         if (preg_match_all('~-?"[^"\f\n\r\t\v]+"|-?\S+~i', $value, $matches))
@@ -27,13 +26,15 @@ class Query implements FilterInterface
             {
                 $matches2 = null;
                 $val = null;
-                if (preg_match('~-?"?(.+)"?~', $match, $matches2))
+
+                if (preg_match('~-?"?([^"\f\n\r\t\v]+)"?~', $match, $matches2))
                 {
                     $val = $matches2[1];
+                    $val = str_replace(' ', '\s+', $val);
                 }
                 else
                 {
-                    throw new \Exception('pattern failed');
+                    throw new \Exception('query does not match pattern');
                 }
 
                 if (0 === strpos($match, '-'))
@@ -46,8 +47,7 @@ class Query implements FilterInterface
                 }
             }
 
-            # ~(?=.*JavaScript)(?=.*jQuery)(?!.*php)~
-            $this->_pattern = '~' . $pattern . '~i';
+            $this->_patterns[$value] = '~' . $pattern . '~i';
         }
         else
         {
@@ -55,28 +55,18 @@ class Query implements FilterInterface
         }
     }
 
-    public function getPattern()
-    {
-        return $this->_pattern;
-    }
-
-    public function setPattern($pattern)
-    {
-        $this->_pattern = $pattern;
-    }
-
     public function isAccepted(Entry $entry)
     {
-        return true;
-
-
-        if (preg_match($this->_pattern, $entry->getTitle())
-            || preg_match($this->_pattern, $entry->getDescription())
-            || preg_match($this->_pattern, $entry->getContent()))
+        foreach ($this->_patterns as $pattern)
         {
-            return true;
+            if (!(preg_match($pattern, strip_tags($entry->getTitle()))
+                || preg_match($pattern, strip_tags($entry->getDescription()))
+                || preg_match($pattern, strip_tags($entry->getContent()))))
+            {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 }

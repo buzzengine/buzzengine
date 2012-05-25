@@ -5,7 +5,6 @@ namespace Pkr\BuzzBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Pkr\BuzzBundle\Entity\Author;
 use Pkr\BuzzBundle\Entity\Domain;
 use Pkr\BuzzBundle\Entity\FeedEntry;
@@ -69,6 +68,7 @@ class DefaultController extends Controller
             {
                 foreach ($entity->getCategory()->getTopics() as $topic)
                 {
+                    $queryFilter = new Filter\Query();
                     foreach ($topic->getQueries() as $query)
                     {
                         if ($query->getDisabled())
@@ -76,117 +76,119 @@ class DefaultController extends Controller
                             continue;
                         }
 
-                        $filterChain = array ();
-                        $filterChain[] = new Filter\Query($query->getValue());
+                        $queryFilter->addQuery($query->getValue());
+                    }
 
-                        // Filter an Query oder Topic --> entsprechend Query-Filter bauen, FeetEntry-Verbindungen bauen
-                        // TODO: Filter BlackWhiteList = Filter/BlackWhiteList
-                        // TODO: Filter Sprache = Filter/Language
-                        // done: Filter Dupletten = Filter/Duplicate
+                    $filterChain = array();
+                    $filterChain[] = $queryFilter;
 
-                        foreach ($filterChain as $filter)
+                    // Filter an Topic
+                    // TODO: Filter BlackWhiteList = Filter/BlackWhiteList
+                    // TODO: Filter Sprache = Filter/Language
+                    // done: Filter Dupletten = Filter/Duplicate
+
+                    foreach ($filterChain as $filter)
+                    {
+                        if (!$filter->isAccepted($entry))
                         {
-                            if (!$filter->isAccepted($entry))
-                            {
-                                continue (2);
-                            }
+                            continue (2);
                         }
+                    }
 
-                        $feedEntry = new FeedEntry();
-                        $feedEntry->setTitle($entry->getTitle());
+                    $feedEntry = new FeedEntry();
+                    $feedEntry->setTitle($entry->getTitle());
 
-                        if (null != $entry->getAuthors())
+                    if (null != $entry->getAuthors())
+                    {
+                        foreach ($entry->getAuthors()->getValues() as $name)
                         {
-                            foreach ($entry->getAuthors()->getValues() as $name)
+                            $author = $authorRepository->findOneBy(
+                                array('name' => $name)
+                            );
+
+                            if (is_null($author))
                             {
-                                $author = $authorRepository->findOneBy(
-                                    array('name' => $name)
-                                );
+                                $author = new Author();
+                                $author->setTopic($topic);
+                                $author->setName($name);
 
-                                if (is_null($author))
+                                $errors = $validator->validate($author);
+                                if (count($errors) > 0)
                                 {
-                                    $author = new Author();
-                                    $author->setTopic($topic);
-                                    $author->setName($name);
-
-                                    $errors = $validator->validate($author);
-                                    if (count($errors) > 0)
-                                    {
-                                        var_dump($errors);
-                                    }
-                                    else
-                                    {
-                                        $em->persist($author);
-                                        $em->flush($author);
-
-                                        $feedEntry->getAuthors()->add($author);
-                                    }
+                                    var_dump($errors);
                                 }
                                 else
                                 {
+                                    $em->persist($author);
+                                    $em->flush($author);
+
                                     $feedEntry->getAuthors()->add($author);
                                 }
                             }
-                        }
-
-                        $feedEntry->setDescription($entry->getDescription());
-                        $feedEntry->setContent($entry->getContent());
-
-                        $dateCreated = new \DateTime($entry->getDateCreated()->get(Date::W3C));
-                        $feedEntry->setDateCreated($dateCreated);
-
-                        $dateModified = new \DateTime($entry->getDateModified()->get(Date::W3C));
-                        $feedEntry->setDateModified($dateModified);
-
-                        $url = $entry->getPermalink();
-                        if (!preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $url, $matches))
-                        {
-                            continue;
-                        }
-                        $url = $matches[1];
-
-                        $domain = $domainRepository->findOneBy(
-                            array('url' => $url)
-                        );
-
-                        if (is_null($domain))
-                        {
-                            $domain = new Domain();
-                            $domain->setTopic($topic);
-                            $domain->setUrl($url);
-
-                            $errors = $validator->validate($domain);
-                            if (count($errors) > 0)
-                            {
-                                var_dump($errors);
-                            }
                             else
                             {
-                                $em->persist($domain);
-                                $em->flush($domain);
-
-                                $feedEntry->setDomain($domain);
+                                $feedEntry->getAuthors()->add($author);
                             }
                         }
-                        else
-                        {
-                            $feedEntry->setDomain($domain);
-                        }
+                    }
 
-                        $feedEntry->setLinks($entry->getLinks());
+                    $feedEntry->setDescription($entry->getDescription());
+                    $feedEntry->setContent($entry->getContent());
 
-                        // @todo: datetime in w3c style? -> timezone
+                    $dateCreated = new \DateTime($entry->getDateCreated()->get(Date::W3C));
+                    $feedEntry->setDateCreated($dateCreated);
 
-                        $errors = $validator->validate($feedEntry);
+                    $dateModified = new \DateTime($entry->getDateModified()->get(Date::W3C));
+                    $feedEntry->setDateModified($dateModified);
 
+                    $url = $entry->getPermalink();
+                    if (!preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $url, $matches))
+                    {
+                        continue;
+                    }
+                    $url = $matches[1];
+
+                    $domain = $domainRepository->findOneBy(
+                        array('url' => $url)
+                    );
+
+                    if (is_null($domain))
+                    {
+                        $domain = new Domain();
+                        $domain->setTopic($topic);
+                        $domain->setUrl($url);
+
+                        $errors = $validator->validate($domain);
                         if (count($errors) > 0)
                         {
                             var_dump($errors);
                         }
                         else
                         {
-                            $em->persist($feedEntry);
+                            $em->persist($domain);
+                            $em->flush($domain);
+
+                            $feedEntry->setDomain($domain);
                         }
+                    }
+                    else
+                    {
+                        $feedEntry->setDomain($domain);
+                    }
+
+                    $feedEntry->setLinks($entry->getLinks());
+
+                    // @todo: datetime in w3c style? -> timezone
+
+                    $errors = $validator->validate($feedEntry);
+
+                    if (count($errors) > 0)
+                    {
+                        var_dump($errors);
+                    }
+                    else
+                    {
+                        $em->persist($feedEntry);
                     }
                 }
             }
