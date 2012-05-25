@@ -59,14 +59,14 @@ class Query implements FilterInterface
     {
         foreach ($this->_patterns as $pattern)
         {
-            if (!(preg_match($pattern, strip_tags($entry->getTitle()))
+            if (preg_match($pattern, strip_tags($entry->getTitle()))
                 || preg_match($pattern, strip_tags($entry->getDescription()))
-                || preg_match($pattern, strip_tags($entry->getContent()))))
+                || preg_match($pattern, strip_tags($entry->getContent())))
             {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }

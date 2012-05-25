@@ -98,4 +98,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($filter->isAccepted($mockEntry));
     }
+
+    public function testIsAccepted3()
+    {
+        $filter = new Query();
+        $filter->addQuery('foo');
+        $filter->addQuery('query');
+        $filter->addQuery('bar');
+
+        $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
+        $mockEntry->expects($this->any())
+                  ->method('getTitle')
+                  ->will($this->returnValue('query'));
+
+        $this->assertTrue($filter->isAccepted($mockEntry));
+    }
 }
