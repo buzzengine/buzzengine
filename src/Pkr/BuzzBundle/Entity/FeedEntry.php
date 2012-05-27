@@ -28,9 +28,9 @@ class FeedEntry
     /**
      * @var string $title
      *
-     * @ORM\Column(name="title", type="string", length=90)
+     * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
-     * @Assert\MaxLength(90)
+     * @Assert\MaxLength(255)
      */
     private $title;
 
