@@ -91,13 +91,15 @@ class DefaultController extends Controller
 
         try
         {
-            // @todo: feed proxy object -> cache
+            // @todo: feed proxy object -> caching
             $feedObject = Reader::import($feed->getUrl());
         }
         catch (\Exception $e)
         {
+            // @todo: log service
             var_dump($e->getMessage(), $feed->getUrl());
-            die(__FILE__ . ' - ' . __LINE__);
+
+            return;
         }
 
         foreach ($feedObject as $feedEntry)
@@ -119,11 +121,7 @@ class DefaultController extends Controller
 
     protected function _persistFeedEntry(Topic $topic, Entry $entry)
     {
-        $validator = $this->get('validator');
         $em = $this->getDoctrine()->getEntityManager();
-
-        $authorRepository = $em->getRepository('PkrBuzzBundle:Author');
-        $domainRepository = $em->getRepository('PkrBuzzBundle:Domain');
 
         $feedEntry = new FeedEntry();
         $feedEntry->setTitle($entry->getTitle());
@@ -132,30 +130,8 @@ class DefaultController extends Controller
         {
             foreach ($entry->getAuthors()->getValues() as $name)
             {
-                $author = $authorRepository->findOneBy(
-                    array('name' => $name)
-                );
-
-                if (is_null($author))
-                {
-                    $author = new Author();
-                    $author->setTopic($topic);
-                    $author->setName($name);
-
-                    $errors = $validator->validate($author);
-                    if (count($errors) > 0)
-                    {
-                        var_dump($errors);
-                    }
-                    else
-                    {
-                        $em->persist($author);
-                        $em->flush($author);
-
-                        $feedEntry->getAuthors()->add($author);
-                    }
-                }
-                else
+                $author = $this->_getAuthor($topic, $name);
+                if (!is_null($author))
                 {
                     $feedEntry->getAuthors()->add($author);
                 }
@@ -171,37 +147,8 @@ class DefaultController extends Controller
         $dateModified = new \DateTime($entry->getDateModified()->get(Date::W3C));
         $feedEntry->setDateModified($dateModified);
 
-        $url = $entry->getPermalink();
-        if (!preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $url, $matches))
-        {
-            return;
-        }
-        $url = $matches[1];
-
-        $domain = $domainRepository->findOneBy(
-            array('url' => $url)
-        );
-
-        if (is_null($domain))
-        {
-            $domain = new Domain();
-            $domain->setTopic($topic);
-            $domain->setUrl($url);
-
-            $errors = $validator->validate($domain);
-            if (count($errors) > 0)
-            {
-                var_dump($errors);
-            }
-            else
-            {
-                $em->persist($domain);
-                $em->flush($domain);
-
-                $feedEntry->setDomain($domain);
-            }
-        }
-        else
+        $domain = $this->_getDomain($topic, $entry->getPermalink());
+        if (!is_null($domain))
         {
             $feedEntry->setDomain($domain);
         }
@@ -210,15 +157,92 @@ class DefaultController extends Controller
 
         // @todo: datetime in w3c style? -> timezone
 
-        $errors = $validator->validate($feedEntry);
-
+        $errors = $this->get('validator')->validate($feedEntry);
         if (count($errors) > 0)
         {
+            // @todo: log service
             var_dump($errors);
         }
         else
         {
             $em->persist($feedEntry);
         }
+    }
+
+    protected function _getAuthor($topic, $name)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $author = $em->getRepository('PkrBuzzBundle:Author')->findOneBy(
+            array('name' => $name)
+        );
+
+        if (is_null($author))
+        {
+            $author = new Author();
+            $author->setTopic($topic);
+            $author->setName($name);
+
+            $errors = $this->get('validator')->validate($author);
+            if (count($errors) > 0)
+            {
+                // @todo: log service
+                var_dump($errors);
+            }
+            else
+            {
+                $em->persist($author);
+                $em->flush($author);
+
+                return $author;
+            }
+        }
+        else
+        {
+            return $author;
+        }
+
+        return null;
+    }
+
+    protected function _getDomain($topic, $url)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if (preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $url, $matches))
+        {
+            $url = $matches[1];
+
+            $domain = $em->getRepository('PkrBuzzBundle:Domain')->findOneBy(
+                array ('url' => $url)
+            );
+
+            if (is_null($domain))
+            {
+                $domain = new Domain();
+                $domain->setTopic($topic);
+                $domain->setUrl($url);
+
+                $errors = $this->get('validator')->validate($domain);
+                if (count($errors) > 0)
+                {
+                    // @todo: log service
+                    var_dump($errors);
+                }
+                else
+                {
+                    $em->persist($domain);
+                    $em->flush($domain);
+
+                    return $domain;
+                }
+            }
+            else
+            {
+                return $domain;
+            }
+        }
+
+        return null;
     }
 }
