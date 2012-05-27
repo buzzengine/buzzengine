@@ -55,6 +55,11 @@ class Query implements FilterInterface
         }
     }
 
+    public function reset()
+    {
+        $this->_patterns = array ();
+    }
+
     public function isAccepted(Entry $entry)
     {
         foreach ($this->_patterns as $pattern)

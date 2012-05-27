@@ -74,6 +74,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($filter->isAccepted($mockEntry));
 
+        $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
         $mockEntry->expects($this->any())
                   ->method('getTitle')
                   ->will($this->returnValue('hello'));
@@ -86,6 +87,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($filter->isAccepted($mockEntry));
 
+        $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
         $mockEntry->expects($this->any())
                   ->method('getTitle')
                   ->will($this->returnValue('hello'));
@@ -97,6 +99,19 @@ class QueryTest extends \PHPUnit_Framework_TestCase
                   ->will($this->returnValue('query'));
 
         $this->assertTrue($filter->isAccepted($mockEntry));
+
+        $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
+        $mockEntry->expects($this->any())
+                  ->method('getTitle')
+                  ->will($this->returnValue('hello'));
+        $mockEntry->expects($this->any())
+                  ->method('getDescription')
+                  ->will($this->returnValue('world'));
+        $mockEntry->expects($this->any())
+                  ->method('getContent')
+                  ->will($this->returnValue('hello world'));
+
+        $this->assertFalse($filter->isAccepted($mockEntry));
     }
 
     public function testIsAccepted3()
@@ -112,5 +127,11 @@ class QueryTest extends \PHPUnit_Framework_TestCase
                   ->will($this->returnValue('query'));
 
         $this->assertTrue($filter->isAccepted($mockEntry));
+
+        $filter->reset();
+        $filter->addQuery('foo');
+        $filter->addQuery('bar');
+
+        $this->assertFalse($filter->isAccepted($mockEntry));
     }
 }
