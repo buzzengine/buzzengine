@@ -16,6 +16,7 @@ use Zend\Date\Date;
 class Feed
 {
     protected $_entityManager = null;
+    protected $_feeds = array ();
 
     public function __construct(EntityManager $em, Validator $validator)
     {
@@ -70,6 +71,26 @@ class Feed
         return $queryFilter;
     }
 
+    protected function _getFeed($url)
+    {
+        if (!array_key_exists($url, $this->_feeds))
+        {
+            try
+            {
+                $this->_feeds[$url] = Reader::import($url);
+            }
+            catch (\Exception $e)
+            {
+                // @todo: log service
+                var_dump($e->getMessage(), $url);
+
+                return null;
+            }
+        }
+
+        return $this->_feeds[$url];
+    }
+
     protected function _handleFeed(Topic $topic, $feed, array $filterChain = null)
     {
         // @todo: getUrl, getDisabled, typehint via interface
@@ -79,16 +100,9 @@ class Feed
             return;
         }
 
-        try
+        $feedObject = $this->_getFeed($feed->getUrl());
+        if (is_null($feedObject))
         {
-            // @todo: feed proxy object -> caching
-            $feedObject = Reader::import($feed->getUrl());
-        }
-        catch (\Exception $e)
-        {
-            // @todo: log service
-            var_dump($e->getMessage(), $feed->getUrl());
-
             return;
         }
 
