@@ -17,4 +17,15 @@
         </service>
     </services>
     -->
+
+    <parameters>
+        <parameter key="pkr_buzz.service.feed.class">Pkr\BuzzBundle\Service\Feed</parameter>
+    </parameters>
+
+    <services>
+        <service id="pkr_buzz.service.feed" class="%pkr_buzz.service.feed.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="validator"/>
+        </service>
+    </services>
 </container>
