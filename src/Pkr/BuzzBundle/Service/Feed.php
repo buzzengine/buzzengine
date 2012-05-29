@@ -31,9 +31,11 @@ class Feed
         foreach ($topics as $topic)
         {
             $filterChain = array ();
+            # $filterChain[] = new Filter\Language(array ('de', 'en'));
 
             // weitere Filter via Topic
             // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
+            // @todo: Filter Regex = Filter/Regex
             // @todo: Filter Sprache = Filter/Language
             // @todo: Filter Dupletten = Filter/Duplicate ?
 
