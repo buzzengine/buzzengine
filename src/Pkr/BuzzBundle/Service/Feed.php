@@ -26,7 +26,8 @@ class Feed
 
     public function run()
     {
-        $topics = $this->_entityManager->getRepository('PkrBuzzBundle:Topic')->findAll();
+        $topics = $this->_entityManager->getRepository('PkrBuzzBundle:Topic')
+                                       ->findAll();
         foreach ($topics as $topic)
         {
             $filterChain = array ();
@@ -164,11 +165,10 @@ class Feed
         {
             // @todo: log service
             var_dump($errors);
+            return;
         }
-        else
-        {
-            $this->_entityManager->persist($feedEntry);
-        }
+
+        $this->_entityManager->persist($feedEntry);
     }
 
     protected function _getAuthor($topic, $name)
@@ -188,85 +188,86 @@ class Feed
             {
                 // @todo: log service
                 var_dump($errors);
+                return null;
             }
-            else
-            {
-                $this->_entityManager->persist($author);
-                $this->_entityManager->flush($author);
 
-                return $author;
-            }
-        }
-        else
-        {
-            return $author;
+            $this->_entityManager->persist($author);
+            $this->_entityManager->flush($author);
         }
 
-        return null;
+        return $author;
     }
 
     protected function _getDomain($topic, $url)
     {
-        $feedProxyDomains = array ('http://feedproxy.google.com');
+        $url = $this->_extractDomain($url);
 
-        // @todo: extractor classes?
-        if (preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $url, $matches))
+        if (is_null($url))
         {
-            $filteredUrl = $matches[1];
-
-            if (in_array($filteredUrl, $feedProxyDomains))
-            {
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_NOBODY, true);
-
-                if (false === curl_exec($curl))
-                {
-                    var_dump('curl_exec failed');
-                    return null;
-                }
-
-                $info = curl_getinfo($curl);
-
-                if (!preg_match('~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~', $info['redirect_url'], $matches))
-                {
-                    var_dump('preg_match failed');
-                    return null;
-                }
-
-                $filteredUrl = $matches[1];
-            }
-
-            $domain = $this->_entityManager->getRepository('PkrBuzzBundle:Domain')->findOneBy(
-                array ('url' => $filteredUrl)
-            );
-
-            if (is_null($domain))
-            {
-                $domain = new Domain();
-                $domain->setTopic($topic);
-                $domain->setUrl($filteredUrl);
-
-                $errors = $this->_validator->validate($domain);
-                if (count($errors) > 0)
-                {
-                    // @todo: log service
-                    var_dump($errors);
-                }
-                else
-                {
-                    $this->_entityManager->persist($domain);
-                    $this->_entityManager->flush($domain);
-
-                    return $domain;
-                }
-            }
-            else
-            {
-                return $domain;
-            }
+            return null;
         }
 
-        return null;
+        $domain = $this->_entityManager->getRepository('PkrBuzzBundle:Domain')->findOneBy(
+            array ('url' => $url)
+        );
+
+        if (is_null($domain))
+        {
+            $domain = new Domain();
+            $domain->setTopic($topic);
+            $domain->setUrl($url);
+
+            $errors = $this->_validator->validate($domain);
+            if (count($errors) > 0)
+            {
+                // @todo: log service
+                var_dump($errors);
+                return null;
+            }
+
+            $this->_entityManager->persist($domain);
+            $this->_entityManager->flush($domain);
+        }
+
+        return $domain;
+    }
+
+    protected function _extractDomain($url)
+    {
+        $feedProxyDomains = array ('http://feedproxy.google.com');
+
+        $pattern = '~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~';
+
+        $matches = array ();
+        if (!preg_match($pattern, $url, $matches))
+        {
+            return null;
+        }
+
+        $filteredUrl = $matches[1];
+
+        if (in_array($filteredUrl, $feedProxyDomains))
+        {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+
+            if (false === curl_exec($curl))
+            {
+                var_dump('curl_exec failed');
+                return null;
+            }
+
+            $info = curl_getinfo($curl);
+
+            if (!preg_match($pattern, $info['redirect_url'], $matches))
+            {
+                return null;
+            }
+
+            $filteredUrl = $matches[1];
+        }
+
+        return $filteredUrl;
     }
 }
