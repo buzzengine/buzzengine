@@ -8,9 +8,12 @@ class Query implements FilterInterface
 {
     protected $_patterns = array ();
 
-    public function __construct($value)
+    public function __construct($value = null)
     {
-        $this->addQuery($value);
+        if (!is_null($value))
+        {
+            $this->addQuery($value);
+        }
     }
 
     public function addQuery($value)

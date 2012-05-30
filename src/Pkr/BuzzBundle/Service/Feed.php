@@ -3,6 +3,7 @@
 namespace Pkr\BuzzBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Pkr\BuzzBundle\Entity\AbstractFeed;
 use Pkr\BuzzBundle\Entity\Author;
 use Pkr\BuzzBundle\Entity\Domain;
 use Pkr\BuzzBundle\Entity\FeedEntry;
@@ -106,10 +107,8 @@ class Feed
         return $this->_feeds[$url];
     }
 
-    protected function _handleFeed(Topic $topic, $feed, array $filterChain = null)
+    protected function _handleFeed(Topic $topic, AbstractFeed $feed, array $filterChain = null)
     {
-        // @todo: getUrl, getDisabled, typehint via interface
-
         if ($feed->getDisabled())
         {
             return;
