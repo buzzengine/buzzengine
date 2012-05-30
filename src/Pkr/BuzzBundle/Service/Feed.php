@@ -25,9 +25,10 @@ class Feed
         $this->_validator = $validator;
     }
 
-    public function run($id = null)
+    public function fetch($id = null)
     {
         $topicRepository = $this->_entityManager->getRepository('PkrBuzzBundle:Topic');
+
         if (is_null($id))
         {
             $topics = $topicRepository->findAll();

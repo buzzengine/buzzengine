@@ -23,7 +23,7 @@ class DefaultController extends Controller
     public function fetchAction($id)
     {
         $feedService = $this->get('pkr_buzz.service.feed');
-        $feedService->run($id);
+        $feedService->fetch($id);
 
         if (is_null($id))
         {
