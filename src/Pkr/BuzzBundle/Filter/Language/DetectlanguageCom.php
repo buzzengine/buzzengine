@@ -1,16 +1,23 @@
 <?php
 
-namespace Pkr\BuzzBundle\Filter;
+namespace Pkr\BuzzBundle\Filter\Language;
 
+use Pkr\BuzzBundle\Filter\FilterInterface;
 use Zend\Feed\Reader\Entry;
 use Zend\Http\Client;
 
-class Language implements FilterInterface
+class DetectlanguageCom implements FilterInterface
 {
-    protected $_apiKey = '';
+    protected $_apiKey = null;
     protected $_allowedLanguages = null;
 
-    public function __construct(array $allowedLanguages)
+    public function __construct($apiKey, array $allowedLanguages)
+    {
+        $this->_apiKey = $apiKey;
+        $this->_allowedLanguages = $allowedLanguages;
+    }
+
+    public function setAllowedLanguages(array $allowedLanguages)
     {
         $this->_allowedLanguages = $allowedLanguages;
     }

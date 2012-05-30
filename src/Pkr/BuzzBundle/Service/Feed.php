@@ -31,7 +31,19 @@ class Feed
         foreach ($topics as $topic)
         {
             $filterChain = array ();
-            # $filterChain[] = new Filter\Language(array ('de', 'en'));
+
+            switch (strtolower('language_detectlanguagecom'))
+            {
+                case 'language_detectlanguagecom':
+                    $filterChain[] = new Filter\Language\DetectlanguageCom('', array ('de', 'en'));
+                    break;
+                case 'query':
+                    $filterChain[] = new Filter\Query('-php');
+                    // @todo
+                    break;
+                default:
+                    throw new Filter\UnknownFilterException();
+            }
 
             // weitere Filter via Topic
             // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
