@@ -39,6 +39,11 @@
         </a>
     </li>
     <li>
+        <a href="{{ path('fetch', { 'id': entity.id }) }}">
+            Fetch Topic
+        </a>
+    </li>
+    <li>
         <form action="{{ path('topic_delete', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
             <button type="submit">Delete</button>

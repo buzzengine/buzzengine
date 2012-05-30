@@ -25,10 +25,18 @@ class Feed
         $this->_validator = $validator;
     }
 
-    public function run()
+    public function run($id = null)
     {
-        $topics = $this->_entityManager->getRepository('PkrBuzzBundle:Topic')
-                                       ->findAll();
+        $topicRepository = $this->_entityManager->getRepository('PkrBuzzBundle:Topic');
+        if (is_null($id))
+        {
+            $topics = $topicRepository->findAll();
+        }
+        else
+        {
+            $topics = $topicRepository->findById($id);
+        }
+
         foreach ($topics as $topic)
         {
             $filterChain = array ();
