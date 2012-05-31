@@ -42,60 +42,6 @@ class Feed
         $this->_entityManager->flush($log);
     }
 
-    public function fetch($id = null)
-    {
-        $topicRepository = $this->_entityManager->getRepository('PkrBuzzBundle:Topic');
-
-        if (is_null($id))
-        {
-            $topics = $topicRepository->findAll();
-        }
-        else
-        {
-            $topics = $topicRepository->findById($id);
-        }
-
-        foreach ($topics as $topic)
-        {
-            $filterChain = array ();
-
-            switch (strtolower('language_detectlanguagecom'))
-            {
-                case 'language_detectlanguagecom':
-                    $filterChain[] = new Filter\Language\DetectlanguageCom('', array ('de', 'en'));
-                    break;
-                case 'query':
-                    $filterChain[] = new Filter\Query('-php');
-                    // @todo
-                    break;
-                default:
-                    throw new Filter\UnknownFilterException();
-            }
-
-            // weitere Filter via Topic
-            // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
-            // @todo: Filter Regex = Filter/Regex
-            // @todo: Filter Sprache = Filter/Language
-
-            foreach ($topic->getTopicFeeds() as $feed)
-            {
-                $this->_handleFeed($topic, $feed, $filterChain);
-            }
-
-            $filterChain[] = $this->_createQueryFilter($topic);
-
-            foreach ($topic->getCategories() as $category)
-            {
-                foreach ($category->getFeeds() as $feed)
-                {
-                    $this->_handleFeed($topic, $feed, $filterChain);
-                }
-            }
-        }
-
-        $this->_entityManager->flush();
-    }
-
     protected function _createQueryFilter(Topic $topic)
     {
         $queryFilter = new Filter\Query();
@@ -326,5 +272,59 @@ class Feed
         }
 
         return $filteredUrl;
+    }
+
+    public function fetch($id = null)
+    {
+        $topicRepository = $this->_entityManager->getRepository('PkrBuzzBundle:Topic');
+
+        if (is_null($id))
+        {
+            $topics = $topicRepository->findAll();
+        }
+        else
+        {
+            $topics = $topicRepository->findById($id);
+        }
+
+        foreach ($topics as $topic)
+        {
+            $filterChain = array ();
+
+            switch (strtolower('language_detectlanguagecom'))
+            {
+                case 'language_detectlanguagecom':
+                    $filterChain[] = new Filter\Language\DetectlanguageCom('', array ('de', 'en'));
+                    break;
+                case 'query':
+                    $filterChain[] = new Filter\Query('-php');
+                    // @todo
+                    break;
+                default:
+                    throw new Filter\UnknownFilterException();
+            }
+
+            // weitere Filter via Topic
+            // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
+            // @todo: Filter Regex = Filter/Regex
+            // @todo: Filter Sprache = Filter/Language
+
+            foreach ($topic->getTopicFeeds() as $feed)
+            {
+                $this->_handleFeed($topic, $feed, $filterChain);
+            }
+
+            $filterChain[] = $this->_createQueryFilter($topic);
+
+            foreach ($topic->getCategories() as $category)
+            {
+                foreach ($category->getFeeds() as $feed)
+                {
+                    $this->_handleFeed($topic, $feed, $filterChain);
+                }
+            }
+        }
+
+        $this->_entityManager->flush();
     }
 }
