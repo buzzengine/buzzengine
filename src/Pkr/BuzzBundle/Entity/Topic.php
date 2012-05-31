@@ -80,6 +80,13 @@ class Topic
      */
     private $authors;
 
+    /**
+     * @var FilterLanguageDetectlanguageCom $filterLanguageDetectlanguageCom
+     *
+     * @ORM\OneToOne(targetEntity="FilterLanguageDetectlanguageCom", mappedBy="topic")
+     */
+    private $filterLanguageDetectlanguageCom;
+
     public function __construct()
     {
         $this->authors = new ArrayCollection();
@@ -197,6 +204,23 @@ class Topic
     public function getAuthors()
     {
         return $this->authors;
+    }
+
+    /**
+     * Get filters
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        $filters = array ();
+
+        if (!is_null($this->filterLanguageDetectlanguageCom))
+        {
+            $filters[] = $this->filterLanguageDetectlanguageCom;
+        }
+
+        return $filters;
     }
 
     public function __toString()

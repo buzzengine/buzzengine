@@ -291,23 +291,32 @@ class Feed
         {
             $filterChain = array ();
 
-            switch (strtolower('language_detectlanguagecom'))
+            foreach ($topic->getFilters() as $filter)
             {
-                case 'language_detectlanguagecom':
-                    $filterChain[] = new Filter\Language\DetectlanguageCom('', array ('de', 'en'));
-                    break;
-                case 'query':
-                    $filterChain[] = new Filter\Query('-php');
-                    // @todo
-                    break;
-                default:
-                    throw new Filter\UnknownFilterException();
+                if ($filter->getDisabled())
+                {
+                    continue;
+                }
+
+                switch ($filter->getClass())
+                {
+                    case 'Filter\Language\DetectlanguageCom':
+                        $filterChain[] = new Filter\Language\DetectlanguageCom(
+                            $filter->getApiKey(),
+                            $filter->getAllowedLanguages()
+                        );
+                        break;
+                    case 'Filter\Query':
+                        $filterChain[] = new Filter\Query('-php');
+                        break;
+                    default:
+                        throw new Filter\UnknownFilterException();
+                }
             }
 
             // weitere Filter via Topic
             // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
             // @todo: Filter Regex = Filter/Regex
-            // @todo: Filter Sprache = Filter/Language
 
             foreach ($topic->getTopicFeeds() as $feed)
             {
