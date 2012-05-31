@@ -7,6 +7,7 @@ use Pkr\BuzzBundle\Entity\AbstractFeed;
 use Pkr\BuzzBundle\Entity\Author;
 use Pkr\BuzzBundle\Entity\Domain;
 use Pkr\BuzzBundle\Entity\FeedEntry;
+use Pkr\BuzzBundle\Entity\Log;
 use Pkr\BuzzBundle\Entity\Topic;
 use Pkr\BuzzBundle\Filter;
 use Symfony\Component\Validator\Validator;
@@ -23,6 +24,22 @@ class Feed
     {
         $this->_entityManager = $em;
         $this->_validator = $validator;
+    }
+
+    protected function _log($message, $level = Log::NOTICE)
+    {
+        $log = new Log();
+        $log->setLevel($level);
+        $log->setMessage($message);
+
+        $errors = $this->_validator->validate($log);
+        if (count($errors) > 0)
+        {
+            throw new \Exception('validate entity log failed');
+        }
+
+        $this->_entityManager->persist($log);
+        $this->_entityManager->flush($log);
     }
 
     public function fetch($id = null)
@@ -59,7 +76,6 @@ class Feed
             // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
             // @todo: Filter Regex = Filter/Regex
             // @todo: Filter Sprache = Filter/Language
-            // @todo: Filter Dupletten = Filter/Duplicate ?
 
             foreach ($topic->getTopicFeeds() as $feed)
             {
@@ -106,8 +122,7 @@ class Feed
             }
             catch (\Exception $e)
             {
-                // @todo: log service
-                var_dump($e->getMessage(), $url);
+                $this->_log($e->getMessage(), Log::WARNING);
 
                 return null;
             }
@@ -148,6 +163,16 @@ class Feed
 
     protected function _persistFeedEntry(Topic $topic, Entry $entry)
     {
+        $feedEntry = $this->_entityManager
+                          ->getRepository('PkrBuzzBundle:FeedEntry')
+                          ->findOneBy(array ('title'   => $entry->getTitle(),
+                                             'content' => $entry->getContent()));
+
+        if (!is_null($feedEntry))
+        {
+            return;
+        }
+
         $feedEntry = new FeedEntry();
         $feedEntry->setTitle($entry->getTitle());
 
@@ -185,8 +210,11 @@ class Feed
         $errors = $this->_validator->validate($feedEntry);
         if (count($errors) > 0)
         {
-            // @todo: log service
-            var_dump($errors);
+            foreach ($errors as $error)
+            {
+                $this->_log('FeedEntry: ' . $error->getMessage() . ': ' . $entry->getTitle(), Log::NOTICE);
+            }
+
             return;
         }
 
@@ -208,8 +236,11 @@ class Feed
             $errors = $this->_validator->validate($author);
             if (count($errors) > 0)
             {
-                // @todo: log service
-                var_dump($errors);
+                foreach ($errors as $error)
+                {
+                    $this->_log('Author: ' . $error->getMessage() . ': ' . $name, Log::NOTICE);
+                }
+
                 return null;
             }
 
@@ -242,8 +273,11 @@ class Feed
             $errors = $this->_validator->validate($domain);
             if (count($errors) > 0)
             {
-                // @todo: log service
-                var_dump($errors);
+                foreach ($errors as $error)
+                {
+                    $this->_log('Domain: ' . $error->getMessage() . ': ' . $url, Log::NOTICE);
+                }
+
                 return null;
             }
 
@@ -276,7 +310,8 @@ class Feed
 
             if (false === curl_exec($curl))
             {
-                var_dump('curl_exec failed');
+                $this->_log('curl_exec failed for url "' . $url . '"', Log::WARNING);
+
                 return null;
             }
 

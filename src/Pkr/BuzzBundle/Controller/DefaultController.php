@@ -34,9 +34,6 @@ class DefaultController extends Controller
             $redirect = $this->generateUrl('topic_show', array ('id' => $id));
         }
 
-        # return $this->redirect($redirect);
-
-        var_dump('fetch finished');
-        die(__FILE__ . ' - ' . __LINE__);
+        return $this->redirect($redirect);
     }
 }
