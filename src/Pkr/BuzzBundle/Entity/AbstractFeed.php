@@ -12,6 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 abstract class AbstractFeed
 {
+    const FETCH_HOURLY = 'fetch hourly';
+    const FETCH_DAILY = 'fetch daily';
+    const FETCH_WEEKLY = 'fetch weekly';
+    const FETCH_MONTHLY = 'fetch monthly';
+
     /**
      * @var integer $id
      *

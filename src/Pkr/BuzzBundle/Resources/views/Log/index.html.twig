@@ -1,0 +1,30 @@
+<h1>Log</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Level</th>
+            <th>Message</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td>{{ entity.id }}</td>
+            <td>{{ entity.level }}</td>
+            <td>{{ entity.message }}</td>
+            <td>{{ entity.create.format('Y-m-d H:i:s') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    <li>
+        <form action="{{ path('log_delete') }}" method="post">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
