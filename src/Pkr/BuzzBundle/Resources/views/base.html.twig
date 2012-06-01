@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+            <title>{% block title %}{% endblock %}Buzz</title>
+        {% endblock %}
+    </head>
+    <body>
+        {% include 'PkrBuzzBundle::_navigation.html.twig' %}
+        <div id="content">{% block content %}{% endblock %}</div>
+    </body>
+</html>

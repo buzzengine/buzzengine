@@ -1,44 +1,48 @@
-<h1>TopicFeed list of Topic '{{ topic.name }}'</h1>
+{% extends 'PkrBuzzBundle::base.html.twig' %}
 
-<table class="records_list">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Url</th>
-            <th>Disabled</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for entity in topicFeeds %}
-        <tr>
-            <td><a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.url }}</td>
-            <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('topicFeed_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+    <h1>TopicFeed list of Topic '{{ topic.name }}'</h1>
 
-<ul>
-    <li>
-        <a href="{{ path('topicFeed_new', { 'id': topic.id }) }}">
-            Create a new entry
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('topic_show', { 'id': topic.id }) }}">
-            Back to topic
-        </a>
-    </li>
-</ul>
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Url</th>
+                <th>Disabled</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in topicFeeds %}
+            <tr>
+                <td><a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.url }}</td>
+                <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('topicFeed_show', { 'id': entity.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('topicFeed_edit', { 'id': entity.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('topicFeed_new', { 'id': topic.id }) }}">
+                Create a new entry
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('topic_show', { 'id': topic.id }) }}">
+                Back to topic
+            </a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,33 +1,37 @@
-<h1>RawFeed</h1>
+{% extends 'PkrBuzzBundle::base.html.twig' %}
 
-<table class="record_properties">
-    <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ entity.id }}</td>
-        </tr>
-        <tr>
-            <th>Url</th>
-            <td>{{ entity.url }}</td>
-        </tr>
-    </tbody>
-</table>
+{% block content %}
+    <h1>RawFeed</h1>
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('rawfeed', { 'id': entity.category.id }) }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('rawfeed_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('rawfeed_delete', { 'id': entity.id }) }}" method="post">
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ entity.url }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('rawfeed', { 'id': entity.category.id }) }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('rawfeed_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>
+            <form action="{{ path('rawfeed_delete', { 'id': entity.id }) }}" method="post">
+                {{ form_widget(delete_form) }}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+    </ul>
+{% endblock %}
