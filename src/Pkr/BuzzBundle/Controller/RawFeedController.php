@@ -43,30 +43,6 @@ class RawFeedController extends Controller
     }
 
     /**
-     * Finds and displays a RawFeed entity.
-     *
-     * @Route("/{id}/show", name="rawfeed_show")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('PkrBuzzBundle:RawFeed')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find RawFeed entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array (
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView()
-        );
-    }
-
-    /**
      * Displays a form to create a new RawFeed entity.
      *
      * @Route("/new/category/{id}", name="rawfeed_new")

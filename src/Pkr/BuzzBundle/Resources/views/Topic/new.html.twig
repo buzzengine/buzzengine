@@ -1,7 +1,17 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
 {% block content %}
-    <h1>Topic creation</h1>
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom">
+                <a class="btn" href="{{ path('topic') }}">
+                    Back
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <h2>Topic creation</h2>
 
     <form action="{{ path('topic_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
@@ -9,12 +19,4 @@
             <button type="submit">Create</button>
         </p>
     </form>
-
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('topic') }}">
-                Back to the list
-            </a>
-        </li>
-    </ul>
 {% endblock %}

@@ -1,7 +1,27 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
 {% block content %}
-    <h1>Query edit</h1>
+    <div class="row">
+        <div class="span8">
+            <p class="margin-bottom">
+                <a class="btn" href="{{ path('query', { 'id': entity.topic.id }) }}">
+                    Back
+                </a>
+            </p>
+        </div>
+        <div class="span4">
+            <form
+                class="pull-right"
+                action="{{ path('query_delete', { 'id': entity.id }) }}"
+                method="post"
+            >
+                {{ form_widget(delete_form) }}
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Query edit</h2>
 
     <form action="{{ path('query_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {{ form_widget(edit_form) }}
@@ -9,18 +29,4 @@
             <button type="submit">Edit</button>
         </p>
     </form>
-
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('query', { 'id': entity.topic.id }) }}">
-                Back to the list
-            </a>
-        </li>
-        <li>
-            <form action="{{ path('query_delete', { 'id': entity.id }) }}" method="post">
-                {{ form_widget(delete_form) }}
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-    </ul>
 {% endblock %}

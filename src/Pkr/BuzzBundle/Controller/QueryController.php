@@ -43,30 +43,6 @@ class QueryController extends Controller
     }
 
     /**
-     * Finds and displays a Query entity.
-     *
-     * @Route("/{id}/show", name="query_show")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('PkrBuzzBundle:Query')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Query entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array (
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView()
-        );
-    }
-
-    /**
      * Displays a form to create a new Query entity.
      *
      * @Route("/new/topic/{id}", name="query_new")

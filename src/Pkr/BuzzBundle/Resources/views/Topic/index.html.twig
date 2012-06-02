@@ -1,52 +1,44 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
 {% block content %}
-    <h1>Topic list</h1>
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom">
+                <a class="btn" href="{{ path('topic_new') }}">
+                    Create topic
+                </a>
+            </p>
+        </div>
+    </div>
 
-    <table class="records_list">
+    <h2>Topics</h2>
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('topic_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.id }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.description }}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('topic_show', { 'id': entity.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('topic_edit', { 'id': entity.id }) }}">edit</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('query', { 'id': entity.id }) }}">queries</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('topicFeed', { 'id': entity.id }) }}">topic feeds</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('fetch', { 'id': entity.id }) }}">fetch topic</a>
-                        </li>
-                    </ul>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-small" href="{{ path('topic_show', { 'id': entity.id }) }}">Show</a>
+                        <a class="btn btn-small" href="{{ path('query', { 'id': entity.id }) }}">Queries</a>
+                        <a class="btn btn-small" href="{{ path('topicFeed', { 'id': entity.id }) }}">Topic feeds</a>
+                        <a class="btn btn-small" href="{{ path('fetch', { 'id': entity.id }) }}">Fetch topic</a>
+                        <a class="btn btn-small" href="{{ path('topic_edit', { 'id': entity.id }) }}">Edit</a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('topic_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
 {% endblock %}

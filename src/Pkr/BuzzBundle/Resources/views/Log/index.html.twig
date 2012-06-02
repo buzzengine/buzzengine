@@ -1,9 +1,19 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
 {% block content %}
-    <h1>Log</h1>
+    <div class="row">
+        <div class="span12">
+            <form
+                class="pull-right"
+                action="{{ path('log_delete') }}"
+                method="post"
+            >
+                <button class="btn btn-danger" type="submit">Clear list</button>
+            </form>
+        </div>
+    </div>
 
-    <table class="records_list">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
@@ -23,12 +33,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <form action="{{ path('log_delete') }}" method="post">
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-    </ul>
 {% endblock %}

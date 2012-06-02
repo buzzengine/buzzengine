@@ -32,29 +32,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Finds and displays a Category entity.
-     *
-     * @Route("/{id}/show", name="category_show")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('PkrBuzzBundle:Category')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Category entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        );
-    }
-
-    /**
      * Displays a form to create a new Category entity.
      *
      * @Route("/new", name="category_new")
@@ -91,7 +68,7 @@ class CategoryController extends Controller
             $em->flush();
 
             return $this->redirect($this->generateUrl('category_show', array('id' => $entity->getId())));
-            
+
         }
 
         return array(

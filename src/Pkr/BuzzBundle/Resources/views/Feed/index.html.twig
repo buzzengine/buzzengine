@@ -1,48 +1,43 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
 {% block content %}
-    <h1>Feed list of Category '{{ category.name }}'</h1>
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom btn-group">
+                <a class="btn" href="{{ path('category') }}">
+                    Back
+                </a>
+                <a class="btn" href="{{ path('feed_new', { 'id': category.id }) }}">
+                    Create feed
+                </a>
+            </p>
+        </div>
+    </div>
 
-    <table class="records_list">
+    <h2>Feed list of Category '{{ category.name }}'</h2>
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Url</th>
                 <th>Disabled</th>
-                <th>Actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         {% for entity in feeds %}
             <tr>
-                <td><a href="{{ path('feed_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.id }}</td>
                 <td>{{ entity.url }}</td>
                 <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('feed_show', { 'id': entity.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('feed_edit', { 'id': entity.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-small" href="{{ path('feed_edit', { 'id': entity.id }) }}">Edit</a>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('feed_new', { 'id': category.id }) }}">
-                Create a new entry
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('category_show', { 'id': category.id }) }}">
-                Back to category
-            </a>
-        </li>
-    </ul>
 {% endblock %}

@@ -42,30 +42,6 @@ class TopicFeedController extends Controller
     }
 
     /**
-     * Finds and displays a Feed entity.
-     *
-     * @Route("/{id}/show", name="topicFeed_show")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('PkrBuzzBundle:TopicFeed')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Feed entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView()
-        );
-    }
-
-    /**
      * Displays a form to create a new Feed entity.
      *
      * @Route("/new/topic/{id}", name="topicFeed_new")
