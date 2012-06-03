@@ -54,6 +54,7 @@ class Author
      * @var ArrayCollection $feedEntries
      *
      * @ORM\ManyToMany(targetEntity="FeedEntry", mappedBy="authors")
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
      */
     private $feedEntries;
 

@@ -40,7 +40,7 @@
                             <tr>
                                 <td><span class="badge">{{ feedEntry.id }}</span></td>
                                 <td>{{ feedEntry.title }}</td>
-                                <td>{{ feedEntry.description|striptags }}</td>
+                                <td>{{ feedEntry.description|raw }}</td>
                                 <td>{{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}</td>
                             </tr>
                         {% endfor %}

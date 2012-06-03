@@ -39,6 +39,7 @@ class Domain
      * @var ArrayCollection $feedEntries
      *
      * @ORM\OneToMany(targetEntity="FeedEntry", mappedBy="domain", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
      */
     private $feedEntries;
 
