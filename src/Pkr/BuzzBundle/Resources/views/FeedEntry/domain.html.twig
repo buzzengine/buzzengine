@@ -5,7 +5,7 @@
 
     <div class="tabbable tabs-right">
         <ul class="nav nav-tabs">
-            {% for domain in domains %}
+            {% for domain in topic.domains %}
                 <li class="{% if loop.first %}active{% endif %}">
                     <a
                         data-toggle="tab"
@@ -19,7 +19,7 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for domain in domains %}
+            {% for domain in topic.domains %}
                 <div
                     class="tab-pane {% if loop.first %}active{% endif %}"
                     id="domain-{{ domain.id }}"

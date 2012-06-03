@@ -16,12 +16,11 @@ use Pkr\BuzzBundle\Entity\FeedEntry;
 class FeedEntryController extends Controller
 {
     /**
-     * Lists all FeedEntry entities by Author of a Topic.
+     * Lists all FeedEntry entities of a Topic.
      *
-     * @Route("/topic/{id}/author", name="feedEntry_author")
-     * @Template()
+     * @Route("/topic/{id}/{view}", name="feedEntry", defaults={"view" = "query"})
      */
-    public function authorAction($id)
+    public function indexAction($id, $view)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -32,41 +31,28 @@ class FeedEntryController extends Controller
             throw $this->createNotFoundException('Unable to find Topic entity.');
         }
 
-        $deleteForm = $this->_createDeleteForm($id);
-        $authors = $em->getRepository('PkrBuzzBundle:Author')->findByTopic($id);
-
-        return array (
-            'topic'       => $topic,
-            'authors'     => $authors,
-            'delete_form' => $deleteForm->createView()
-        );
-    }
-
-    /**
-     * Lists all FeedEntry entities by Domain of a Topic.
-     *
-     * @Route("/topic/{id}/domain", name="feedEntry_domain")
-     * @Template()
-     */
-    public function domainAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $topic = $em->getRepository('PkrBuzzBundle:Topic')->find($id);
-
-        if (!$topic)
+        switch ($view)
         {
-            throw $this->createNotFoundException('Unable to find Topic entity.');
+            case 'query':
+                $viewScript = 'PkrBuzzBundle:FeedEntry:query.html.twig';
+                break;
+            case 'domain':
+                $viewScript = 'PkrBuzzBundle:FeedEntry:domain.html.twig';
+                break;
+            case 'author':
+                $viewScript = 'PkrBuzzBundle:FeedEntry:author.html.twig';
+                break;
+            default:
+                throw $this->createNotFoundException('Unable to find view.');
         }
 
         $deleteForm = $this->_createDeleteForm($id);
-        $domains = $em->getRepository('PkrBuzzBundle:Domain')->findByTopic($id);
 
-        return array (
-            'topic'       => $topic,
-            'domains'     => $domains,
-            'delete_form' => $deleteForm->createView()
-        );
+        return $this->render($viewScript, array (
+                'topic'       => $topic,
+                'view'        => $view,
+                'delete_form' => $deleteForm->createView()
+        ));
     }
 
     /**
@@ -101,7 +87,7 @@ class FeedEntryController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('feedEntry_author', array ('id' => $id)));
+        return $this->redirect($this->generateUrl('feedEntry', array ('id' => $id)));
     }
 
     protected function _createDeleteForm($id)

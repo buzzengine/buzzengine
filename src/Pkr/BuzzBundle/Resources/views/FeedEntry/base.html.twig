@@ -27,14 +27,14 @@
     <h2>FeedEntry list of Topic '{{ topic.name }}'</h2>
 
     <ul class="nav nav-tabs">
-        <li class="{% if app.request.get('_route') == 'feedEntry_author' %}active{% endif %}">
-            <a href="{{ path('feedEntry_author', { 'id': topic.id }) }}">by Authors</a>
+        <li class="{% if view == 'query' %}active{% endif %}">
+            <a href="{{ path('feedEntry', { 'id': topic.id, 'view': 'query' }) }}">by Queries</a>
         </li>
-        <li class="{% if app.request.get('_route') == 'feedEntry_domain' %}active{% endif %}">
-            <a href="{{ path('feedEntry_domain', { 'id': topic.id }) }}">by Domains</a>
+        <li class="{% if view == 'domain' %}active{% endif %}">
+            <a href="{{ path('feedEntry', { 'id': topic.id, 'view': 'domain' }) }}">by Domains</a>
         </li>
-        <li>
-            <a href="#">by Queries</a>
+        <li class="{% if view == 'author' %}active{% endif %}">
+            <a href="{{ path('feedEntry', { 'id': topic.id, 'view': 'author' }) }}">by Authors</a>
         </li>
     </ul>
 {% endblock %}
