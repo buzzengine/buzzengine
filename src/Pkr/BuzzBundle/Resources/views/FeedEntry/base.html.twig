@@ -26,10 +26,10 @@
     <h2>FeedEntry list of Topic '{{ topic.name }}'</h2>
 
     <ul class="nav nav-tabs">
-        <li>
+        <li class="{% if app.request.get('_route') == 'feedEntry_author' %}active{% endif %}">
             <a href="{{ path('feedEntry_author', { 'id': topic.id }) }}">by Authors</a>
         </li>
-        <li>
+        <li class="{% if app.request.get('_route') == 'feedEntry_domain' %}active{% endif %}">
             <a href="{{ path('feedEntry_domain', { 'id': topic.id }) }}">by Domains</a>
         </li>
         <li>
