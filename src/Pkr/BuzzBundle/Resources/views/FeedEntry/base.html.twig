@@ -15,9 +15,10 @@
         <div class="span4">
             <form
                 class="pull-right"
-                action="TODO"
+                action="{{ path('feedEntry_delete', { 'id': topic.id }) }}"
                 method="post"
             >
+                {{ form_widget(delete_form) }}
                 <button class="btn btn-danger" type="submit">Clear list</button>
             </form>
         </div>
