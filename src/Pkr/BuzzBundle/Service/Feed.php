@@ -68,7 +68,7 @@ class Feed
             }
             catch (\Exception $e)
             {
-                $this->_log($e->getMessage(), Log::WARNING);
+                $this->_log($e->getMessage() . ', import of "' . $url . '" failed', Log::WARNING);
 
                 return null;
             }
@@ -236,7 +236,10 @@ class Feed
 
     protected function _extractDomain($url)
     {
-        $feedProxyDomains = array ('http://feedproxy.google.com');
+        $feedProxyDomains = array (
+            'http://feedproxy.google.com',
+            'http://rss.feedsportal.com'
+        );
 
         $pattern = '~^((http|https)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}).*~';
 
