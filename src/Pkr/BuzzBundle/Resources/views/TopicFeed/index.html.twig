@@ -19,7 +19,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
+                <th></th>
                 <th>Url</th>
                 <th>Disabled</th>
                 <th></th>
@@ -28,7 +28,7 @@
         <tbody>
         {% for entity in topicFeeds %}
             <tr>
-                <td>{{ entity.id }}</td>
+                <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.url }}</td>
                 <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
                 <td>

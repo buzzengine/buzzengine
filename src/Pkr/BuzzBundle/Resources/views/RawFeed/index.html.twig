@@ -19,7 +19,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
+                <th></th>
                 <th>Url</th>
                 <th></th>
             </tr>
@@ -27,7 +27,7 @@
         <tbody>
         {% for entity in rawFeeds %}
             <tr>
-                <td>{{ entity.id }}</td>
+                <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.url }}</td>
                 <td>
                     <div class="btn-group pull-right">

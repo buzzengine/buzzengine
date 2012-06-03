@@ -16,7 +16,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
+                <th></th>
                 <th>Name</th>
                 <th></th>
             </tr>
@@ -24,7 +24,7 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td>{{ entity.id }}</td>
+                <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.name }}</td>
                 <td>
                     <div class="btn-group pull-right">

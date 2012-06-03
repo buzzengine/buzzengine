@@ -18,7 +18,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
+                <th></th>
                 <th>Level</th>
                 <th>Message</th>
                 <th>Timestamp</th>
@@ -27,7 +27,7 @@
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td>{{ entity.id }}</td>
+                <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.level }}</td>
                 <td>{{ entity.message }}</td>
                 <td>{{ entity.create.format('Y-m-d H:i:s') }}</td>
