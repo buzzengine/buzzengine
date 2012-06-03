@@ -1,0 +1,53 @@
+{% extends 'PkrBuzzBundle:FeedEntry:base.html.twig' %}
+
+{% block content %}
+    {{ parent() }}
+
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            {% for author in authors %}
+                <li class="{% if loop.first %}active{% endif %}">
+                    <a
+                        data-toggle="tab"
+                        href="#author-{{ author.id }}"
+                    >
+                        <span class="badge">{{ author.id }}</span>
+                        {{ author.name }}
+                        <span class="badge badge-info">{{ author.feedEntries.count }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for author in authors %}
+                <div
+                    class="tab-pane {% if loop.first %}active{% endif %}"
+                    id="author-{{ author.id }}"
+                >
+                    <table
+                        class="table table-striped"
+                    >
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for feedEntry in author.feedEntries %}
+                            <tr>
+                                <td><span class="badge">{{ feedEntry.id }}</span></td>
+                                <td>{{ feedEntry.title }}</td>
+                                <td>{{ feedEntry.description|striptags }}</td>
+                                <td>{{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

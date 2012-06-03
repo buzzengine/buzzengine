@@ -1,0 +1,53 @@
+{% extends 'PkrBuzzBundle:FeedEntry:base.html.twig' %}
+
+{% block content %}
+    {{ parent() }}
+
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs">
+            {% for domain in domains %}
+                <li class="{% if loop.first %}active{% endif %}">
+                    <a
+                        data-toggle="tab"
+                        href="#domain-{{ domain.id }}"
+                    >
+                        <span class="badge">{{ domain.id }}</span>
+                        {{ domain.url }}
+                        <span class="badge badge-info">{{ domain.feedEntries.count }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for domain in domains %}
+                <div
+                    class="tab-pane {% if loop.first %}active{% endif %}"
+                    id="domain-{{ domain.id }}"
+                >
+                    <table
+                        class="table table-striped"
+                    >
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for feedEntry in domain.feedEntries %}
+                            <tr>
+                                <td><span class="badge">{{ feedEntry.id }}</span></td>
+                                <td>{{ feedEntry.title }}</td>
+                                <td>{{ feedEntry.description|raw }}</td>
+                                <td>{{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

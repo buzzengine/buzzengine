@@ -1,0 +1,39 @@
+{% extends 'PkrBuzzBundle::base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="span8">
+            <p class="margin-bottom btn-group">
+                <a class="btn" href="{{ path('topic') }}">
+                    Back
+                </a>
+                <a class="btn" href="{{ path('fetch', { 'id': topic.id }) }}">
+                    Fetch topic
+                </a>
+            </p>
+        </div>
+        <div class="span4">
+            <form
+                class="pull-right"
+                action="TODO"
+                method="post"
+            >
+                <button class="btn btn-danger" type="submit">Clear list</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>FeedEntry list of Topic '{{ topic.name }}'</h2>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a href="{{ path('feedEntry_author', { 'id': topic.id }) }}">by Authors</a>
+        </li>
+        <li>
+            <a href="{{ path('feedEntry_domain', { 'id': topic.id }) }}">by Domains</a>
+        </li>
+        <li>
+            <a href="#">by Queries</a>
+        </li>
+    </ul>
+{% endblock %}
