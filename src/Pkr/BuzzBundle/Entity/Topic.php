@@ -83,7 +83,7 @@ class Topic
     /**
      * @var FilterLanguageDetectlanguageCom $filterLanguageDetectlanguageCom
      *
-     * @ORM\OneToOne(targetEntity="FilterLanguageDetectlanguageCom", mappedBy="topic")
+     * @ORM\OneToOne(targetEntity="FilterLanguageDetectlanguageCom", mappedBy="topic", cascade={"persist", "remove"})
      */
     private $filterLanguageDetectlanguageCom;
 
