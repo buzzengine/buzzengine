@@ -76,9 +76,9 @@ class TopicFeedController extends Controller
      */
     public function createAction()
     {
-        $entity  = new Feed();
+        $entity  = new TopicFeed();
         $request = $this->getRequest();
-        $form    = $this->createForm(new FeedType(), $entity);
+        $form    = $this->createForm(new TopicFeedType(), $entity);
         $form->bindRequest($request);
 
         if ($form->isValid()) {
@@ -86,11 +86,13 @@ class TopicFeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topicFeed_show', array('id' => $entity->getId())));
-
+            return $this->redirect($this->generateUrl(
+                    'topicFeed',
+                    array ('id' => $entity->getTopic()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form'   => $form->createView()
         );
@@ -150,10 +152,13 @@ class TopicFeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topicFeed_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl(
+                    'topicFeed',
+                    array ('id' => $entity->getTopic()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -185,7 +190,10 @@ class TopicFeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('topicFeed', array('id' => $entity->getTopic()->getId())));
+        return $this->redirect($this->generateUrl(
+                'topicFeed',
+                array ('id' => $entity->getTopic()->getId())
+        ));
     }
 
     private function createDeleteForm($id)

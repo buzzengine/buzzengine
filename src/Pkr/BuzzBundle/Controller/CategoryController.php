@@ -67,11 +67,10 @@ class CategoryController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('category_show', array('id' => $entity->getId())));
-
+            return $this->redirect($this->generateUrl('category'));
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form'   => $form->createView()
         );
@@ -96,7 +95,7 @@ class CategoryController extends Controller
         $editForm = $this->createForm(new CategoryType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -131,10 +130,10 @@ class CategoryController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('category_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('category'));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

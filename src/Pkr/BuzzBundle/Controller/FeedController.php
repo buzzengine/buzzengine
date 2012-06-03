@@ -86,11 +86,13 @@ class FeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('feed_show', array('id' => $entity->getId())));
-
+            return $this->redirect($this->generateUrl(
+                    'feed',
+                    array ('id' => $entity->getCategory()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form'   => $form->createView()
         );
@@ -150,10 +152,13 @@ class FeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('feed_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl(
+                    'feed',
+                    array ('id' => $entity->getCategory()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -185,7 +190,10 @@ class FeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('feed', array('id' => $entity->getCategory()->getId())));
+        return $this->redirect($this->generateUrl(
+                'feed',
+                array ('id' => $entity->getCategory()->getId())
+        ));
     }
 
     private function createDeleteForm($id)

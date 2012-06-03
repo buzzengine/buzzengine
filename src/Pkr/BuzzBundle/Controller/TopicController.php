@@ -32,29 +32,6 @@ class TopicController extends Controller
     }
 
     /**
-     * Finds and displays a Topic entity.
-     *
-     * @Route("/{id}/show", name="topic_show")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('PkrBuzzBundle:Topic')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Topic entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        );
-    }
-
-    /**
      * Displays a form to create a new Topic entity.
      *
      * @Route("/new", name="topic_new")
@@ -90,11 +67,10 @@ class TopicController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topic_show', array('id' => $entity->getId())));
-            
+            return $this->redirect($this->generateUrl('topic'));
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form'   => $form->createView()
         );
@@ -119,7 +95,7 @@ class TopicController extends Controller
         $editForm = $this->createForm(new TopicType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -154,10 +130,10 @@ class TopicController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('topic_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('topic'));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

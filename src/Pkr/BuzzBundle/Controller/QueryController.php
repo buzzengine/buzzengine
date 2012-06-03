@@ -97,11 +97,13 @@ class QueryController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('query_show', array('id' => $entity->getId())));
-
+            return $this->redirect($this->generateUrl(
+                    'query',
+                    array ('id' => $entity->getTopic()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity' => $entity,
             'form'   => $form->createView()
         );
@@ -169,10 +171,13 @@ class QueryController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('query_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl(
+                    'query',
+                    array('id' => $entity->getTopic()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -210,7 +215,10 @@ class QueryController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('query', array('id' => $entity->getTopic()->getId())));
+        return $this->redirect($this->generateUrl(
+                'query',
+                array ('id' => $entity->getTopic()->getId())
+        ));
     }
 
     private function createDeleteForm($id)

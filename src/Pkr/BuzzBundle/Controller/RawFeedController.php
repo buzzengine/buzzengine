@@ -97,8 +97,10 @@ class RawFeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('rawfeed_show', array('id' => $entity->getId())));
-
+            return $this->redirect($this->generateUrl(
+                    'rawfeed',
+                    array ('id' => $entity->getCategory()->getId())
+            ));
         }
 
         return array(
@@ -126,7 +128,7 @@ class RawFeedController extends Controller
         $editForm = $this->createForm(new RawFeedType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -168,10 +170,13 @@ class RawFeedController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('rawfeed_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl(
+                    'rawfeed',
+                    array ('id' => $entity->getCategory()->getId())
+            ));
         }
 
-        return array(
+        return array (
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -209,7 +214,10 @@ class RawFeedController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('rawfeed', array('id' => $entity->getCategory()->getId())));
+        return $this->redirect($this->generateUrl(
+                'rawfeed',
+                array ('id' => $entity->getCategory()->getId())
+        ));
     }
 
     private function createDeleteForm($id)
