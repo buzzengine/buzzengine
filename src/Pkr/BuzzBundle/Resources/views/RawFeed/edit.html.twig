@@ -1,5 +1,7 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
+{% block headline %}Edit raw feed{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="span8">
@@ -20,8 +22,6 @@
             </form>
         </div>
     </div>
-
-    <h2>RawFeed edit</h2>
 
     <form action="{{ path('rawfeed_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {{ form_widget(edit_form) }}

@@ -1,5 +1,7 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
+{% block headline %}Feeds of category '{{ category.name }}'{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="span12">
@@ -13,8 +15,6 @@
             </p>
         </div>
     </div>
-
-    <h2>Feed list of Category '{{ category.name }}'</h2>
 
     <table class="table table-striped">
         <thead>

@@ -1,5 +1,7 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
+{% block headline %}Create category{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="span12">
@@ -10,8 +12,6 @@
             </p>
         </div>
     </div>
-
-    <h2>Category creation</h2>
 
     <form action="{{ path('category_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}

@@ -18,7 +18,21 @@
     </head>
     <body>
         <div class="container">
-            {% include 'PkrBuzzBundle::navigation.html.twig' %}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <span class="brand">{% block headline %}{% endblock %}</span>
+                        <ul class="nav pull-right">
+                            <li><a href="{{ path('topic') }}">Topics</a></li>
+                            <li><a href="{{ path('category') }}">Categories</a></li>
+                            <li class="divider-vertical"></li>
+                            <li><a href="{{ path('fetch') }}">Fetch</a></li>
+                            <li><a href="{{ path('log') }}">Log</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             {% block content %}{% endblock %}
         </div>
     </body>

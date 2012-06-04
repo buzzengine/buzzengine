@@ -1,5 +1,7 @@
 {% extends 'PkrBuzzBundle::base.html.twig' %}
 
+{% block headline %}Feed entries of topic '{{ topic.name }}'{% endblock %}
+
 {% block content %}
     <div class="row">
         <div class="span8">
@@ -23,8 +25,6 @@
             </form>
         </div>
     </div>
-
-    <h2>FeedEntry list of Topic '{{ topic.name }}'</h2>
 
     <ul class="nav nav-tabs">
         <li class="{% if view == 'query' %}active{% endif %}">
