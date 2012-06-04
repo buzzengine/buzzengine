@@ -6,7 +6,7 @@
     <div class="row">
         <div class="span8">
             <p class="margin-bottom">
-                <a class="btn" href="{{ path('topicFeed', { 'id': entity.topic.id }) }}">
+                <a class="btn btn-small" href="{{ path('topicFeed', { 'id': entity.topic.id }) }}">
                     Back
                 </a>
             </p>
@@ -18,7 +18,7 @@
                 method="post"
             >
                 {{ form_widget(delete_form) }}
-                <button class="btn btn-danger" type="submit">Delete</button>
+                <button class="btn btn-small btn-danger" type="submit">Delete</button>
             </form>
         </div>
     </div>

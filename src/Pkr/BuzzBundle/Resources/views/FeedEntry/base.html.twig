@@ -6,10 +6,10 @@
     <div class="row">
         <div class="span8">
             <p class="margin-bottom btn-group">
-                <a class="btn" href="{{ path('topic') }}">
+                <a class="btn btn-small" href="{{ path('topic') }}">
                     Back
                 </a>
-                <a class="btn" href="{{ path('fetch', { 'id': topic.id }) }}">
+                <a class="btn btn-small" href="{{ path('fetch', { 'id': topic.id }) }}">
                     Fetch topic
                 </a>
             </p>
@@ -21,7 +21,7 @@
                 method="post"
             >
                 {{ form_widget(delete_form) }}
-                <button class="btn btn-danger" type="submit">Clear list</button>
+                <button class="btn btn-small btn-danger" type="submit">Clear list</button>
             </form>
         </div>
     </div>
