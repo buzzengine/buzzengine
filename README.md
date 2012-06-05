@@ -1,3 +1,11 @@
+Buzz Engine als Symfony Bundle
+==============================
+
+0. Datenbankverbindung in app/config/parameters.ini setzen
+0. Webserver auf den web-Ordner zeigen lassen
+0. Installation via Ant und <code>$ ant init</code>
+0. System im Browser öffnen
+
 Symfony Standard Edition
 ========================
 

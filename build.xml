@@ -7,23 +7,33 @@
     <target
         name="cleanup"
     >
-        <delete dir="${basedir}/app/cache">
-            <include name="*"/>
+        <delete
+            dir="${basedir}/app/cache"
+            includeEmptyDirs="true"
+        >
+            <include name="**/*"/>
             <exclude name=".gitkeep"/>
         </delete>
-        <delete dir="${basedir}/app/log">
-            <include name="*"/>
+        <delete
+            dir="${basedir}/app/logs"
+            includeEmptyDirs="true"
+        >
+            <include name="**/*"/>
             <exclude name=".gitkeep"/>
         </delete>
-    </target>
-    <target
-        name="permissions"
-    >
         <chmod perm="a+rw">
             <dirset dir="${basedir}">
                 <include name="app/cache"/>
                 <include name="app/logs"/>
             </dirset>
         </chmod>
+    </target>
+    <target
+        name="init"
+        depends="cleanup"
+    >
+        <exec dir="${basedir}/app" executable="php">
+            <arg line="console doctrine:schema:update --force"/>
+        </exec>
     </target>
 </project>
