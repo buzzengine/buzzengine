@@ -18,7 +18,12 @@ class FeedEntryController extends Controller
     /**
      * Lists all FeedEntry entities of a Topic.
      *
-     * @Route("/topic/{id}/{view}", name="feedEntry", defaults={"view" = "query"})
+     * @Route(
+     *  "/topic/{id}/{view}",
+     *  name="feedEntry",
+     *  requirements={"view" = "query|domain|author"},
+     *  defaults={"view" = "query"}
+     * )
      */
     public function indexAction($id, $view)
     {

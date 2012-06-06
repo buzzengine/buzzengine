@@ -13,7 +13,7 @@
                     >
                         <span class="badge">{{ query.id }}</span>
                         {{ query.value }}
-                        <span class="badge badge-info">todo</span>
+                        <span class="badge badge-info">{{ query.feedEntries.count }}</span>
                     </a>
                 </li>
             {% endfor %}
@@ -35,6 +35,16 @@
                                 <th>Timestamp</th>
                             </tr>
                         </thead>
+                        <tbody>
+                        {% for feedEntry in query.feedEntries %}
+                            <tr>
+                                <td><span class="badge">{{ feedEntry.id }}</span></td>
+                                <td>{{ feedEntry.title }}</td>
+                                <td>{{ feedEntry.description|raw }}</td>
+                                <td>{{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             {% endfor %}

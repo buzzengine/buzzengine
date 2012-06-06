@@ -9,6 +9,7 @@ use Pkr\BuzzBundle\Entity\Domain;
 use Pkr\BuzzBundle\Entity\FeedEntry;
 use Pkr\BuzzBundle\Entity\Log;
 use Pkr\BuzzBundle\Entity\Topic;
+use Pkr\BuzzBundle\Entity\TopicFeed;
 use Pkr\BuzzBundle\Filter;
 use Symfony\Component\Validator\Validator;
 use Zend\Feed\Reader\Entry;
@@ -90,81 +91,98 @@ class Feed
             return;
         }
 
-        foreach ($feedObject as $feedEntry)
+        foreach ($feedObject as $feedEntryObject)
         {
             if (!is_null($filterChain))
             {
                 foreach ($filterChain as $filter)
                 {
-                    if (!$filter->isAccepted($feedEntry))
+                    if (!$filter->isAccepted($feedEntryObject))
                     {
                         continue (2);
                     }
                 }
             }
 
-            $this->_persistFeedEntry($topic, $feedEntry);
-        }
-    }
-
-    protected function _persistFeedEntry(Topic $topic, Entry $entry)
-    {
-        $feedEntry = $this->_entityManager
+            $feedEntry = $this->_entityManager
                           ->getRepository('PkrBuzzBundle:FeedEntry')
-                          ->findOneBy(array ('title'   => $entry->getTitle(),
-                                             'content' => $entry->getContent()));
+                          ->findOneBy(array ('title'   => $feedEntryObject->getTitle(),
+                                             'content' => $feedEntryObject->getContent()));
 
-        if (!is_null($feedEntry))
-        {
-            return;
-        }
-
-        $feedEntry = new FeedEntry();
-        $feedEntry->setTitle($entry->getTitle());
-
-        if (null !== $entry->getAuthors())
-        {
-            foreach ($entry->getAuthors()->getValues() as $name)
+            if (is_null($feedEntry))
             {
-                $author = $this->_getAuthor($topic, $name);
-                if (!is_null($author))
+                $feedEntry = new FeedEntry();
+                $feedEntry->setTitle($feedEntryObject->getTitle());
+
+                if (null !== $feedEntryObject->getAuthors())
                 {
-                    $feedEntry->getAuthors()->add($author);
+                    foreach ($feedEntryObject->getAuthors()->getValues() as $name)
+                    {
+                        $author = $this->_getAuthor($topic, $name);
+                        if (!is_null($author))
+                        {
+                            $feedEntry->getAuthors()->add($author);
+                        }
+                    }
+                }
+
+                $feedEntry->setDescription($feedEntryObject->getDescription());
+                $feedEntry->setContent($feedEntryObject->getContent());
+
+                $dateCreated = new \DateTime($feedEntryObject->getDateCreated()->get(Date::W3C));
+                $feedEntry->setDateCreated($dateCreated);
+
+                $dateModified = new \DateTime($feedEntryObject->getDateModified()->get(Date::W3C));
+                $feedEntry->setDateModified($dateModified);
+
+                $domain = $this->_getDomain($topic, $feedEntryObject->getPermalink());
+                if (!is_null($domain))
+                {
+                    $feedEntry->setDomain($domain);
+                }
+
+                $feedEntry->setLinks($feedEntryObject->getLinks());
+
+                if ($feed instanceof TopicFeed && null !== $feed->getQuery())
+                {
+                    $feedEntry->getQueries()->add($feed->getQuery());
+                }
+                else
+                {
+                    // @todo: Query via Filter
+                }
+
+                // @todo: datetime in w3c style? -> timezone
+
+                $errors = $this->_validator->validate($feedEntry);
+                if (count($errors) > 0)
+                {
+                    foreach ($errors as $error)
+                    {
+                        $this->_log('FeedEntry: ' . $error->getMessage() . ': ' . $feedEntryObject->getTitle(), Log::NOTICE);
+                    }
+
+                    return;
                 }
             }
-        }
-
-        $feedEntry->setDescription($entry->getDescription());
-        $feedEntry->setContent($entry->getContent());
-
-        $dateCreated = new \DateTime($entry->getDateCreated()->get(Date::W3C));
-        $feedEntry->setDateCreated($dateCreated);
-
-        $dateModified = new \DateTime($entry->getDateModified()->get(Date::W3C));
-        $feedEntry->setDateModified($dateModified);
-
-        $domain = $this->_getDomain($topic, $entry->getPermalink());
-        if (!is_null($domain))
-        {
-            $feedEntry->setDomain($domain);
-        }
-
-        $feedEntry->setLinks($entry->getLinks());
-
-        // @todo: datetime in w3c style? -> timezone
-
-        $errors = $this->_validator->validate($feedEntry);
-        if (count($errors) > 0)
-        {
-            foreach ($errors as $error)
+            else
             {
-                $this->_log('FeedEntry: ' . $error->getMessage() . ': ' . $entry->getTitle(), Log::NOTICE);
+                $queries = $feedEntry->getQueries();
+                if ($feed instanceof TopicFeed && null !== $feed->getQuery())
+                {
+                    if (!$queries->contains($feed->getQuery()))
+                    {
+                        $feedEntry->getQueries()->add($feed->getQuery());
+                    }
+                }
+                else
+                {
+                    //// @todo: Query via Filter
+                }
             }
 
-            return;
+            $this->_entityManager->persist($feedEntry);
         }
-
-        $this->_entityManager->persist($feedEntry);
     }
 
     protected function _getAuthor($topic, $name)

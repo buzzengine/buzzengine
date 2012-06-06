@@ -71,6 +71,17 @@ class FeedEntry
     private $links;
 
     /**
+     * @var ArrayCollection $queries
+     *
+     * @ORM\ManyToMany(targetEntity="Query", inversedBy="feedEntries")
+     * @ORM\JoinTable(name="FeedEntryQuery",
+     *      joinColumns={@ORM\JoinColumn(name="feedEntryId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="queryId", referencedColumnName="id")}
+     * )
+     */
+    private $queries;
+
+    /**
      * @var Domain $domain
      *
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="feedEntries")
@@ -93,6 +104,7 @@ class FeedEntry
 
     public function __construct()
     {
+        $this->queries = new ArrayCollection();
         $this->authors = new ArrayCollection();
     }
 
@@ -224,6 +236,26 @@ class FeedEntry
     public function getLinks()
     {
         return $this->links;
+    }
+
+    /**
+     * Set queries
+     *
+     * @param ArrayCollection $queries
+     */
+    public function setQueries(ArrayCollection $queries)
+    {
+        $this->queries = $queries;
+    }
+
+    /**
+     * Get queries
+     *
+     * @return ArrayCollection
+     */
+    public function getQueries()
+    {
+        return $this->queries;
     }
 
     /**

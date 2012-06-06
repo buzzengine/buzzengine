@@ -57,9 +57,18 @@ class Query
      */
     private $topicFeeds;
 
+    /**
+     * @var ArrayCollection $feedEntries
+     *
+     * @ORM\ManyToMany(targetEntity="FeedEntry", mappedBy="queries")
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
+     */
+    private $feedEntries;
+
     public function __construct()
     {
         $this->topicFeeds = new ArrayCollection();
+        $this->feedEntries = new ArrayCollection();
     }
 
     /**
@@ -140,5 +149,15 @@ class Query
     public function getTopicFeeds()
     {
         return $this->topicFeeds;
+    }
+
+    /**
+     * Get feedEntries
+     *
+     * @return ArrayCollection
+     */
+    public function getFeedEntries()
+    {
+        return $this->feedEntries;
     }
 }
