@@ -2,11 +2,13 @@
 
 namespace Pkr\BuzzBundle\Filter;
 
+use Pkr\BuzzBundle\Entity;
 use Zend\Feed\Reader\Entry;
 
 class Query implements FilterInterface
 {
-    protected $_patterns = array ();
+    protected $_matchedQueries = array ();
+    protected $_queries = array ();
 
     public function __construct($value = null)
     {
@@ -16,7 +18,7 @@ class Query implements FilterInterface
         }
     }
 
-    public function addQuery($value)
+    public function addQuery(Entity\Query $query)
     {
         /*
          * ~-?"[^"\f\n\r\t\v]+"|-?\S+~i oder ~-?"[^"]+"|-?\S+~i
@@ -25,7 +27,7 @@ class Query implements FilterInterface
          */
 
         $matches = null;
-        if (preg_match_all('~-?"[^"\f\n\r\t\v]+"|-?\S+~i', $value, $matches))
+        if (preg_match_all('~-?"[^"\f\n\r\t\v]+"|-?\S+~i', $query->getValue(), $matches))
         {
             $matches = current($matches);
             $pattern = '';
@@ -55,7 +57,9 @@ class Query implements FilterInterface
                 }
             }
 
-            $this->_patterns[$value] = '~' . $pattern . '~i';
+            $pattern = '~' . $pattern . '~i';
+
+            $this->_queries[$pattern] = $query;
         }
         else
         {
@@ -65,19 +69,32 @@ class Query implements FilterInterface
 
     public function reset()
     {
-        $this->_patterns = array ();
+        $this->_matchedQueries = array ();
+        $this->_queries = array ();
+    }
+
+    public function getMatchedQueries()
+    {
+        return $this->_matchedQueries;
     }
 
     public function isAccepted(Entry $entry)
     {
-        foreach ($this->_patterns as $pattern)
+        $this->_matchedQueries = array ();
+
+        foreach ($this->_queries as $pattern => $query)
         {
             if (preg_match($pattern, strip_tags($entry->getTitle()))
                 || preg_match($pattern, strip_tags($entry->getDescription()))
                 || preg_match($pattern, strip_tags($entry->getContent())))
             {
-                return true;
+                $this->_matchedQueries[] = $query;
             }
+        }
+
+        if (count ($this->_matchedQueries))
+        {
+            return true;
         }
 
         return false;

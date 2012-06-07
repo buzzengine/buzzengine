@@ -18,6 +18,8 @@ use Zend\Date\Date;
 
 class Feed
 {
+    const QUERY_FILTER_KEY = 'queryFilter';
+
     protected $_entityManager = null;
     protected $_feeds = array ();
 
@@ -53,7 +55,7 @@ class Feed
                 continue;
             }
 
-            $queryFilter->addQuery($query->getValue());
+            $queryFilter->addQuery($query);
         }
 
         return $queryFilter;
@@ -143,13 +145,10 @@ class Feed
 
                 $feedEntry->setLinks($feedEntryObject->getLinks());
 
-                if ($feed instanceof TopicFeed && null !== $feed->getQuery())
+                $queryFilter = $filterChain[self::QUERY_FILTER_KEY];
+                foreach ($queryFilter->getMatchedQueries() as $query)
                 {
-                    $feedEntry->getQueries()->add($feed->getQuery());
-                }
-                else
-                {
-                    // @todo: Query via Filter
+                    $feedEntry->getQueries()->add($query);
                 }
 
                 // @todo: datetime in w3c style? -> timezone
@@ -168,16 +167,14 @@ class Feed
             else
             {
                 $queries = $feedEntry->getQueries();
-                if ($feed instanceof TopicFeed && null !== $feed->getQuery())
+                $queryFilter = $filterChain[self::QUERY_FILTER_KEY];
+
+                foreach ($queryFilter->getMatchedQueries() as $query)
                 {
-                    if (!$queries->contains($feed->getQuery()))
+                    if (!$queries->contains($query))
                     {
-                        $feedEntry->getQueries()->add($feed->getQuery());
+                        $feedEntry->getQueries()->add($query);
                     }
-                }
-                else
-                {
-                    //// @todo: Query via Filter
                 }
             }
 
@@ -311,6 +308,7 @@ class Feed
         foreach ($topics as $topic)
         {
             $filterChain = array ();
+            $filterChain[self::QUERY_FILTER_KEY] = $this->_createQueryFilter($topic);
 
             foreach ($topic->getFilters() as $filter)
             {
@@ -327,9 +325,6 @@ class Feed
                             $filter->getAllowedLanguages()
                         );
                         break;
-                    case 'Filter\Query':
-                        $filterChain[] = new Filter\Query('-php');
-                        break;
                     default:
                         throw new Filter\UnknownFilterException();
                 }
@@ -343,8 +338,6 @@ class Feed
             {
                 $this->_handleFeed($topic, $feed, $filterChain);
             }
-
-            $filterChain[] = $this->_createQueryFilter($topic);
 
             foreach ($topic->getCategories() as $category)
             {

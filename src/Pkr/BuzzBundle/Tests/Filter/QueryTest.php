@@ -2,13 +2,14 @@
 
 namespace Pkr\BuzzBundle\Tests\Filter;
 
-use Pkr\BuzzBundle\Filter\Query;
+use Pkr\BuzzBundle\Entity;
+use Pkr\BuzzBundle\Filter;
 
 class QueryTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $filter = new Query();
+        $filter = new Filter\Query();
         $this->assertInstanceOf('Pkr\BuzzBundle\Filter\FilterInterface', $filter);
     }
 
@@ -45,8 +46,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
     protected function _testIsAccepted($query, $content)
     {
-        $filter = new Query();
-        $filter->addQuery($query);
+        $filter = new Filter\Query();
+        $entity = new Entity\Query();
+        $entity->setValue($query);
+        $filter->addQuery($entity);
 
         $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
         $mockEntry->expects($this->any())
@@ -58,8 +61,10 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAccepted2()
     {
-        $filter = new Query();
-        $filter->addQuery('query');
+        $filter = new Filter\Query();
+        $entity = new Entity\Query();
+        $entity->setValue('query');
+        $filter->addQuery($entity);
 
         $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
         $mockEntry->expects($this->any())
@@ -116,10 +121,18 @@ class QueryTest extends \PHPUnit_Framework_TestCase
 
     public function testIsAccepted3()
     {
-        $filter = new Query();
-        $filter->addQuery('foo');
-        $filter->addQuery('query');
-        $filter->addQuery('bar');
+        $filter = new Filter\Query();
+        $entity = new Entity\Query();
+        $entity->setValue('foo');
+        $filter->addQuery($entity);
+
+        $entity2 = new Entity\Query();
+        $entity2->setValue('query');
+        $filter->addQuery($entity2);
+
+        $entity3 = new Entity\Query();
+        $entity3->setValue('bar');
+        $filter->addQuery($entity3);
 
         $mockEntry = $this->getMock('Zend\Feed\Reader\Entry');
         $mockEntry->expects($this->any())
@@ -129,8 +142,13 @@ class QueryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($filter->isAccepted($mockEntry));
 
         $filter->reset();
-        $filter->addQuery('foo');
-        $filter->addQuery('bar');
+        $entity = new Entity\Query();
+        $entity->setValue('foo');
+        $filter->addQuery($entity);
+
+        $entity2 = new Entity\Query();
+        $entity2->setValue('bar');
+        $filter->addQuery($entity2);
 
         $this->assertFalse($filter->isAccepted($mockEntry));
     }
