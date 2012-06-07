@@ -19,7 +19,7 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for domain in topic.domains %}
+            {% for domain in topic.domainsOrdered %}
                 <div
                     class="tab-pane {% if loop.first %}active{% endif %}"
                     id="domain-{{ domain.id }}"

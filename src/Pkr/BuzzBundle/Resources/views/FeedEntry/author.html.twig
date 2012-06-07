@@ -19,7 +19,7 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for author in topic.authors %}
+            {% for author in topic.authorsOrdered %}
                 <div
                     class="tab-pane {% if loop.first %}active{% endif %}"
                     id="author-{{ author.id }}"

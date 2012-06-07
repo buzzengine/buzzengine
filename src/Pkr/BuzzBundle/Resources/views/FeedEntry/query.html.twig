@@ -19,7 +19,7 @@
             {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for query in topic.queries %}
+            {% for query in topic.queriesOrdered %}
                 <div
                     class="tab-pane {% if loop.first %}active{% endif %}"
                     id="query-{{ query.id }}"
