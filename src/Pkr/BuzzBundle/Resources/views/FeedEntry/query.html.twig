@@ -5,7 +5,7 @@
 
     <div class="tabbable tabs-right">
         <ul class="nav nav-tabs">
-            {% for query in topic.queries %}
+            {% for query in topic.queriesOrdered %}
                 <li class="{% if loop.first %}active{% endif %}">
                     <a
                         data-toggle="tab"

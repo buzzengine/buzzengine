@@ -5,7 +5,7 @@
 
     <div class="tabbable tabs-right">
         <ul class="nav nav-tabs">
-            {% for author in topic.authors %}
+            {% for author in topic.authorsOrdered %}
                 <li class="{% if loop.first %}active{% endif %}">
                     <a
                         data-toggle="tab"

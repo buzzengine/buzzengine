@@ -177,6 +177,31 @@ class Topic
     }
 
     /**
+     * Get queriesOrdered
+     *
+     * @return Array
+     */
+    public function getQueriesOrdered()
+    {
+        $array = $this->queries->toArray();
+
+        uasort($array, function (Query $a, Query $b)
+        {
+            $aCount = $a->getFeedEntries()->count();
+            $bCount = $b->getFeedEntries()->count();
+
+            if ($aCount == $bCount)
+            {
+                return 0;
+            }
+
+            return ($aCount > $bCount) ? -1 : 1;
+        });
+
+        return $array;
+    }
+
+    /**
      * Get topicFeeds
      *
      * @return ArrayCollection
@@ -197,6 +222,31 @@ class Topic
     }
 
     /**
+     * Get domainsOrdered
+     *
+     * @return Array
+     */
+    public function getDomainsOrdered()
+    {
+        $array = $this->domains->toArray();
+
+        uasort($array, function (Domain $a, Domain $b)
+        {
+            $aCount = $a->getFeedEntries()->count();
+            $bCount = $b->getFeedEntries()->count();
+
+            if ($aCount == $bCount)
+            {
+                return 0;
+            }
+
+            return ($aCount > $bCount) ? -1 : 1;
+        });
+
+        return $array;
+    }
+
+    /**
      * Get authors
      *
      * @return ArrayCollection
@@ -204,6 +254,31 @@ class Topic
     public function getAuthors()
     {
         return $this->authors;
+    }
+
+    /**
+     * Get authorsOrdered
+     *
+     * @return Array
+     */
+    public function getAuthorsOrdered()
+    {
+        $array = $this->authors->toArray();
+
+        uasort($array, function (Author $a, Author $b)
+        {
+            $aCount = $a->getFeedEntries()->count();
+            $bCount = $b->getFeedEntries()->count();
+
+            if ($aCount == $bCount)
+            {
+                return 0;
+            }
+
+            return ($aCount > $bCount) ? -1 : 1;
+        });
+
+        return $array;
     }
 
     /**
