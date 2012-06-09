@@ -14,15 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FilterLanguageDetectlanguageCom extends AbstractFilter
 {
     /**
-     * @var string $apiKey
-     *
-     * @ORM\Column(name="apiKey", type="string", length=90)
-     * @Assert\NotBlank()
-     * @Assert\MaxLength(90)
-     */
-    private $apiKey;
-
-    /**
      * @var array $allowedLanguages
      *
      * @ORM\Column(name="allowedLanguages", type="array")
@@ -44,26 +35,6 @@ class FilterLanguageDetectlanguageCom extends AbstractFilter
     public function getClass()
     {
         return 'Filter\Language\DetectlanguageCom';
-    }
-
-    /**
-     * Set apiKey
-     *
-     * @param string $apiKey
-     */
-    public function setApiKey($apiKey)
-    {
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * Get apiKey
-     *
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
     }
 
     /**

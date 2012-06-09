@@ -22,11 +22,14 @@ class Feed
 
     protected $_entityManager = null;
     protected $_feeds = array ();
+    protected $_filterConfig = null;
+    protected $_validator = null;
 
-    public function __construct(EntityManager $em, Validator $validator)
+    public function __construct(EntityManager $em, Validator $validator, array $filterConfig)
     {
         $this->_entityManager = $em;
         $this->_validator = $validator;
+        $this->_filterConfig = $filterConfig;
     }
 
     protected function _log($message, $level = Log::NOTICE)
@@ -320,8 +323,14 @@ class Feed
                 switch ($filter->getClass())
                 {
                     case 'Filter\Language\DetectlanguageCom':
+                        if (empty($this->_filterConfig['language']['detectlanguageCom']['apiKey']))
+                        {
+                            $this->_log('Filter: detectlanguage.com api key missing', Log::NOTICE);
+                            break;
+                        }
+
                         $filterChain[] = new Filter\Language\DetectlanguageCom(
-                            $filter->getApiKey(),
+                            $this->_filterConfig['language']['detectlanguageCom']['apiKey'],
                             $filter->getAllowedLanguages()
                         );
                         break;
