@@ -1,0 +1,59 @@
+{% extends 'PkrBuzzBundle::base.html.twig' %}
+
+{% block headline %}Filters of topic '{{ topic.name }}'{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom btn-group">
+                <a class="btn btn-small" href="{{ path('topic') }}">
+                    Back
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Filter</th>
+                <th>Settings</th>
+                <th>Disabled</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if topic.filterLanguageDetectlanguageCom is null %}
+                <tr>
+                    <td></td>
+                    <td>detectlanguage.com</td>
+                    <td>not in use</td>
+                    <td></td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-small" href="{{ path('filter_new', { 'id': topic.id, 'filter': 'languageDetectlanguageCom' }) }}">Use</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><span class="badge">{{ topic.filterLanguageDetectlanguageCom.id }}</span></td>
+                    <td>detectlanguage.com</td>
+                    <td>
+                        allowed languages:
+                        {% for i in topic.filterLanguageDetectlanguageCom.allowedLanguages %}
+                            {{ i }}{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{% if topic.filterLanguageDetectlanguageCom.disabled == true %}true{% else %}false{% endif %}</td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-small" href="{{ path('filter_edit', { 'id': topic.filterLanguageDetectlanguageCom.id, 'filter': 'languageDetectlanguageCom' }) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

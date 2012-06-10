@@ -1,0 +1,22 @@
+{% extends 'PkrBuzzBundle::base.html.twig' %}
+
+{% block headline %}Create filter{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom">
+                <a class="btn btn-small" href="{{ path('filter', { 'id': entity.topic.id }) }}">
+                    Back
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <form action="{{ path('filter_create', { 'filter': filter }) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+{% endblock %}

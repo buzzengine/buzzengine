@@ -282,6 +282,16 @@ class Topic
     }
 
     /**
+     * Get filterLanguageDetectlanguageCom
+     *
+     * @return FilterLanguageDetectlanguageCom
+     */
+    public function getFilterLanguageDetectlanguageCom()
+    {
+        return $this->filterLanguageDetectlanguageCom;
+    }
+
+    /**
      * Get filters
      *
      * @return array

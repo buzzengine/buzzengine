@@ -1,0 +1,32 @@
+{% extends 'PkrBuzzBundle::base.html.twig' %}
+
+{% block headline %}Edit filter{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="span8">
+            <p class="margin-bottom">
+                <a class="btn btn-small" href="{{ path('filter', { 'id': entity.topic.id }) }}">
+                    Back
+                </a>
+            </p>
+        </div>
+        <div class="span4">
+            <form
+                class="pull-right"
+                action="{{ path('filter_delete', { 'id': entity.id, 'filter': filter }) }}"
+                method="post"
+            >
+                {{ form_widget(delete_form) }}
+                <button class="btn btn-small btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <form action="{{ path('filter_update', { 'id': entity.id, 'filter': filter }) }}" method="post" {{ form_enctype(edit_form) }}>
+        {{ form_widget(edit_form) }}
+        <p>
+            <button type="submit">Edit</button>
+        </p>
+    </form>
+{% endblock %}
