@@ -81,6 +81,13 @@ class Topic
     private $authors;
 
     /**
+     * @var FilterRegex $filterRegex
+     *
+     * @ORM\OneToOne(targetEntity="FilterRegex", mappedBy="topic", cascade={"persist", "remove"})
+     */
+    private $filterRegex;
+
+    /**
      * @var FilterLanguageDetectlanguageCom $filterLanguageDetectlanguageCom
      *
      * @ORM\OneToOne(targetEntity="FilterLanguageDetectlanguageCom", mappedBy="topic", cascade={"persist", "remove"})
@@ -282,6 +289,16 @@ class Topic
     }
 
     /**
+     * Get filterRegex
+     *
+     * @return FilterRegex
+     */
+    public function getFilterRegex()
+    {
+        return $this->filterRegex;
+    }
+
+    /**
      * Get filterLanguageDetectlanguageCom
      *
      * @return FilterLanguageDetectlanguageCom
@@ -299,6 +316,11 @@ class Topic
     public function getFilters()
     {
         $filters = array ();
+
+        if (!is_null($this->filterRegex))
+        {
+            $filters[] = $this->filterRegex;
+        }
 
         if (!is_null($this->filterLanguageDetectlanguageCom))
         {

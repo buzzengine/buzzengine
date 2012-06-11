@@ -24,10 +24,35 @@
             </tr>
         </thead>
         <tbody>
+            {% if topic.filterRegex is null %}
+                <tr>
+                    <td></td>
+                    <td>Regular expression</td>
+                    <td>not in use</td>
+                    <td></td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-small" href="{{ path('filter_new', { 'id': topic.id, 'filter': 'regex' }) }}">Use</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><span class="badge">{{ topic.filterRegex.id }}</span></td>
+                    <td>Regular expression</td>
+                    <td>{{ topic.filterRegex.value }}</td>
+                    <td>{% if topic.filterRegex.disabled == true %}true{% else %}false{% endif %}</td>
+                    <td>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-small" href="{{ path('filter_edit', { 'id': topic.filterRegex.id, 'filter': 'regex' }) }}">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
             {% if topic.filterLanguageDetectlanguageCom is null %}
                 <tr>
                     <td></td>
-                    <td>detectlanguage.com</td>
+                    <td>Language: detectlanguage.com</td>
                     <td>not in use</td>
                     <td></td>
                     <td>
@@ -39,7 +64,7 @@
             {% else %}
                 <tr>
                     <td><span class="badge">{{ topic.filterLanguageDetectlanguageCom.id }}</span></td>
-                    <td>detectlanguage.com</td>
+                    <td>Language: detectlanguage.com</td>
                     <td>
                         allowed languages:
                         {% for i in topic.filterLanguageDetectlanguageCom.allowedLanguages %}

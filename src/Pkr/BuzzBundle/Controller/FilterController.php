@@ -20,6 +20,9 @@ class FilterController extends Controller
     {
         switch ($filter)
         {
+            case 'regex':
+                $entity = new Entity\FilterRegex();
+                break;
             case 'languageDetectlanguageCom':
                 $entity = new Entity\FilterLanguageDetectlanguageCom();
                 break;
@@ -36,6 +39,10 @@ class FilterController extends Controller
 
         switch ($filter)
         {
+            case 'regex':
+                $entity = $em->getRepository('PkrBuzzBundle:FilterRegex')
+                             ->find($id);
+                break;
             case 'languageDetectlanguageCom':
                 $entity = $em->getRepository('PkrBuzzBundle:FilterLanguageDetectlanguageCom')
                              ->find($id);
@@ -56,6 +63,9 @@ class FilterController extends Controller
     {
         switch ($filter)
         {
+            case 'regex':
+                $formType = new Form\FilterRegexType();
+                break;
             case 'languageDetectlanguageCom':
                 $formType = new Form\FilterLanguageDetectlanguageComType();
                 break;

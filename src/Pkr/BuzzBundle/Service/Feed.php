@@ -322,6 +322,9 @@ class Feed
 
                 switch ($filter->getClass())
                 {
+                    case 'Filter\Regex':
+                        $filterChain[] = new Filter\Regex($filter->getValue());
+                        break;
                     case 'Filter\Language\DetectlanguageCom':
                         if (empty($this->_filterConfig['language']['detectlanguageCom']['apiKey']))
                         {
@@ -338,10 +341,6 @@ class Feed
                         throw new Filter\UnknownFilterException();
                 }
             }
-
-            // weitere Filter via Topic
-            // @todo: Filter BlackWhiteList = Filter/BlackWhiteList
-            // @todo: Filter Regex = Filter/Regex
 
             foreach ($topic->getTopicFeeds() as $feed)
             {
