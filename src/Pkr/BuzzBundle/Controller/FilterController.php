@@ -16,6 +16,56 @@ use Pkr\BuzzBundle\Form;
  */
 class FilterController extends Controller
 {
+    protected function _getNewEntityByFilter($filter)
+    {
+        switch ($filter)
+        {
+            case 'languageDetectlanguageCom':
+                $entity = new Entity\FilterLanguageDetectlanguageCom();
+                break;
+            default:
+                throw $this->createNotFoundException('Unable to find filter entity.');
+        }
+
+        return $entity;
+    }
+
+    protected function _getEntityByFilter($filter, $id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        switch ($filter)
+        {
+            case 'languageDetectlanguageCom':
+                $entity = $em->getRepository('PkrBuzzBundle:FilterLanguageDetectlanguageCom')
+                             ->find($id);
+                break;
+            default:
+                throw $this->createNotFoundException('Unable to find filter.');
+        }
+
+        if (!$entity)
+        {
+            throw $this->createNotFoundException('Unable to find filter.');
+        }
+
+        return $entity;
+    }
+
+    protected function _getFormTypeByFilter($filter)
+    {
+        switch ($filter)
+        {
+            case 'languageDetectlanguageCom':
+                $formType = new Form\FilterLanguageDetectlanguageComType();
+                break;
+            default:
+                throw $this->createNotFoundException('Unable to find filter type.');
+        }
+
+        return $formType;
+    }
+
     /**
      * Lists all filters of a Topic.
      *
@@ -58,18 +108,9 @@ class FilterController extends Controller
             throw $this->createNotFoundException('Unable to find Topic entity.');
         }
 
-        switch ($filter)
-        {
-            case 'languageDetectlanguageCom':
-                $entity = new Entity\FilterLanguageDetectlanguageCom();
-                $formType = new Form\FilterLanguageDetectlanguageComType();
-                break;
-            default:
-                throw $this->createNotFoundException('Unable to find filter.');
-        }
-
+        $entity = $this->_getNewEntityByFilter($filter);
         $entity->setTopic($topic);
-        $form = $this->createForm($formType, $entity);
+        $form = $this->createForm($this->_getFormTypeByFilter($filter), $entity);
 
         return array (
             'filter' => $filter,
@@ -91,18 +132,9 @@ class FilterController extends Controller
      */
     public function createAction($filter)
     {
-        switch ($filter)
-        {
-            case 'languageDetectlanguageCom':
-                $entity = new Entity\FilterLanguageDetectlanguageCom();
-                $formType = new Form\FilterLanguageDetectlanguageComType();
-                break;
-            default:
-                throw $this->createNotFoundException('Unable to find filter.');
-        }
-
+        $entity  = $this->_getNewEntityByFilter($filter);
         $request = $this->getRequest();
-        $form    = $this->createForm($formType, $entity);
+        $form    = $this->createForm($this->_getFormTypeByFilter($filter), $entity);
         $form->bindRequest($request);
 
         if ($form->isValid())
@@ -135,25 +167,8 @@ class FilterController extends Controller
      */
     public function editAction($id, $filter)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        switch ($filter)
-        {
-            case 'languageDetectlanguageCom':
-                $entity = $em->getRepository('PkrBuzzBundle:FilterLanguageDetectlanguageCom')
-                             ->find($id);
-                $formType = new Form\FilterLanguageDetectlanguageComType();
-                break;
-            default:
-                throw $this->createNotFoundException('Unable to find filter.');
-        }
-
-        if (!$entity)
-        {
-            throw $this->createNotFoundException('Unable to find filter.');
-        }
-
-        $editForm = $this->createForm($formType, $entity);
+        $entity = $this->_getEntityByFilter($filter, $id);
+        $editForm = $this->createForm($this->_getFormTypeByFilter($filter), $entity);
         $deleteForm = $this->_createDeleteForm($id);
 
         return array (
@@ -176,25 +191,8 @@ class FilterController extends Controller
      */
     public function updateAction($id, $filter)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        switch ($filter)
-        {
-            case 'languageDetectlanguageCom':
-                $entity = $em->getRepository('PkrBuzzBundle:FilterLanguageDetectlanguageCom')
-                             ->find($id);
-                $formType = new Form\FilterLanguageDetectlanguageComType();
-                break;
-            default:
-                throw $this->createNotFoundException('Unable to find filter.');
-        }
-
-        if (!$entity)
-        {
-            throw $this->createNotFoundException('Unable to find filter.');
-        }
-
-        $editForm   = $this->createForm($formType, $entity);
+        $entity = $this->_getEntityByFilter($filter, $id);
+        $editForm = $this->createForm($this->_getFormTypeByFilter($filter), $entity);
         $deleteForm = $this->_createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -202,6 +200,7 @@ class FilterController extends Controller
 
         if ($editForm->isValid())
         {
+            $em = $this->getDoctrine()->getEntityManager();
             $em->persist($entity);
             $em->flush();
 
@@ -237,23 +236,9 @@ class FilterController extends Controller
 
         if ($form->isValid())
         {
+            $entity = $this->_getEntityByFilter($filter, $id);
+
             $em = $this->getDoctrine()->getEntityManager();
-
-            switch ($filter)
-            {
-                case 'languageDetectlanguageCom':
-                    $entity = $em->getRepository('PkrBuzzBundle:FilterLanguageDetectlanguageCom')
-                                 ->find($id);
-                    break;
-                default:
-                    throw $this->createNotFoundException('Unable to find filter.');
-            }
-
-            if (!$entity)
-            {
-                throw $this->createNotFoundException('Unable to find filter.');
-            }
-
             $em->remove($entity);
             $em->flush();
         }
