@@ -61,6 +61,28 @@ class FeedEntryController extends Controller
     }
 
     /**
+     * Shows a FeedEntry entity.
+     *
+     * @Route("/{id}/show", name="feedEntry_show")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $feedEntry = $em->getRepository('PkrBuzzBundle:FeedEntry')->find($id);
+
+        if (!$feedEntry)
+        {
+            throw $this->createNotFoundException('Unable to find FeedEntry entity.');
+        }
+
+        return array (
+            'feedEntry' => $feedEntry
+        );
+    }
+
+    /**
      * Deletes all Author, Domain and FeedEntry entities of a Topic.
      *
      * @Route("/topic/{id}/delete", name="feedEntry_delete")

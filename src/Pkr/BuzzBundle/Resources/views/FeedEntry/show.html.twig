@@ -1,0 +1,48 @@
+{% extends 'PkrBuzzBundle::base.html.twig' %}
+
+{% block headline %}Feed entry{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="span12">
+            <p class="margin-bottom btn-group">
+                <a class="btn btn-small" href="{{ path('feedEntry', { 'id': feedEntry.domain.topic.id }) }}">
+                    Back
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th><h1>{{ feedEntry.title }}</h1></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="badge">{{ feedEntry.id }}</span></td>
+                <td>
+                    {% if feedEntry.authors.count != 0 %}
+                        by
+                        {% for author in feedEntry.authors%}
+                            {% if not loop.first %},{% endif %}
+                            {{ author.name }}
+                        {% endfor %}
+                    {% endif %}
+                    via <a href="{{ feedEntry.links.0 }}">{{ feedEntry.domain.url }}</a>
+                    on {{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}
+                </td>
+            </tr>
+            <tr>
+                <td><h2>Description</h2></td>
+                <td>{{ feedEntry.description|raw }}</td>
+            </tr>
+            <tr>
+                <td><h2>Content</h2></td>
+                <td>{{ feedEntry.content|raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

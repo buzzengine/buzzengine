@@ -31,17 +31,31 @@
                             <tr>
                                 <th></th>
                                 <th>Title</th>
-                                <th>Description</th>
                                 <th>Timestamp</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for feedEntry in query.feedEntries %}
                             <tr>
                                 <td><span class="badge">{{ feedEntry.id }}</span></td>
-                                <td>{{ feedEntry.title }}</td>
-                                <td>{{ feedEntry.description|raw }}</td>
+                                <td>
+                                    <strong>{{ feedEntry.title }}</strong><br>
+                                    {% if feedEntry.authors.count != 0 %}
+                                        by
+                                        {% for author in feedEntry.authors%}
+                                            {% if not loop.first %},{% endif %}
+                                            {{ author.name }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    via <a href="{{ feedEntry.links.0 }}">{{ feedEntry.domain.url }}</a>
+                                </td>
                                 <td>{{ feedEntry.dateCreated.format('Y-m-d H:i:s') }}</td>
+                                <td>
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-small" href="{{ path('feedEntry_show', { 'id': feedEntry.id }) }}">Show</a>
+                                    </div>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
