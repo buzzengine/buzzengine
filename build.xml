@@ -33,6 +33,9 @@
         depends="cleanup"
     >
         <exec dir="${basedir}/app" executable="php">
+            <arg line="console assets:install --symlink ../web"/>
+        </exec>
+        <exec dir="${basedir}/app" executable="php">
             <arg line="console doctrine:schema:update --force"/>
         </exec>
     </target>
