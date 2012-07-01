@@ -4,6 +4,7 @@
     default="cleanup"
     basedir="."
 >
+    <property name="webserver.user" value="www"/>
     <target
         name="cleanup"
     >
@@ -27,6 +28,10 @@
                 <include name="app/logs"/>
             </dirset>
         </chmod>
+        <exec executable="chmod">
+            <arg line="+a '${webserver.user} allow delete,write,append,file_inherit,directory_inherit'"/>
+            <arg line="'${basedir}/app/cache' '${basedir}/app/logs'"/>
+        </exec>
     </target>
     <target
         name="init"
