@@ -14,6 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RawFeed
 {
+    const FETCH_HOURLY = 'fetch hourly';
+    const FETCH_DAILY = 'fetch daily';
+    const FETCH_WEEKLY = 'fetch weekly';
+    const FETCH_MONTHLY = 'fetch monthly';
+
     const PLACEHOLDER = '*QUERY*';
 
     /**
@@ -39,6 +44,19 @@ class RawFeed
      * )
      */
     private $url;
+
+    /**
+     * @var string $fetchFrequency
+     *
+     * @ORM\Column(name="fetchFrequency", type="string", length=30)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(30)
+     * @Assert\Choice(
+     *      choices = {"fetch hourly", "fetch daily", "fetch weekly", "fetch monthly"},
+     *      message = "Choose a valid fetch frequency."
+     * )
+     */
+    protected $fetchFrequency;
 
     /**
      * @var Category $category
@@ -95,6 +113,26 @@ class RawFeed
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Set fetchFrequency
+     *
+     * @param string $fetchFrequency
+     */
+    public function setFetchFrequency($fetchFrequency)
+    {
+        $this->fetchFrequency = $fetchFrequency;
+    }
+
+    /**
+     * Get fetchFrequency
+     *
+     * @return string
+     */
+    public function getFetchFrequency()
+    {
+        return $this->fetchFrequency;
     }
 
     /**

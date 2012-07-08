@@ -37,6 +37,19 @@ abstract class AbstractFeed
     protected $url;
 
     /**
+     * @var string $fetchFrequency
+     *
+     * @ORM\Column(name="fetchFrequency", type="string", length=30)
+     * @Assert\NotBlank()
+     * @Assert\MaxLength(30)
+     * @Assert\Choice(
+     *      choices = {"fetch hourly", "fetch daily", "fetch weekly", "fetch monthly"},
+     *      message = "Choose a valid fetch frequency."
+     * )
+     */
+    protected $fetchFrequency;
+
+    /**
      * @var boolean $disabled
      *
      * @ORM\Column(name="disabled", type="boolean")
@@ -72,6 +85,26 @@ abstract class AbstractFeed
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * Set fetchFrequency
+     *
+     * @param string $fetchFrequency
+     */
+    public function setFetchFrequency($fetchFrequency)
+    {
+        $this->fetchFrequency = $fetchFrequency;
+    }
+
+    /**
+     * Get fetchFrequency
+     *
+     * @return string
+     */
+    public function getFetchFrequency()
+    {
+        return $this->fetchFrequency;
     }
 
     /**

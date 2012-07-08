@@ -21,6 +21,7 @@
             <tr>
                 <th></th>
                 <th>Url</th>
+                <th>Fetch frequency</th>
                 <th></th>
             </tr>
         </thead>
@@ -29,6 +30,7 @@
             <tr>
                 <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.url }}</td>
+                <td>{{ entity.fetchFrequency }}</td>
                 <td>
                     <div class="btn-group pull-right">
                         <a class="btn btn-small" href="{{ path('rawfeed_edit', { 'id': entity.id }) }}">Edit</a>

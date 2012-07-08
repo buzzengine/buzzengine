@@ -163,6 +163,7 @@ class RawFeedController extends Controller
         {
             foreach ($entity->getTopicFeeds() as $feed)
             {
+                $feed->setFetchFrequency($entity->getFetchFrequency());
                 $feed->generateUrl();
                 $em->persist($feed);
             }

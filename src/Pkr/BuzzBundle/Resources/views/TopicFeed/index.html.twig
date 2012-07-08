@@ -21,6 +21,7 @@
             <tr>
                 <th></th>
                 <th>Url</th>
+                <th>Fetch frequency</th>
                 <th>Disabled</th>
                 <th></th>
             </tr>
@@ -30,6 +31,7 @@
             <tr>
                 <td><span class="badge">{{ entity.id }}</span></td>
                 <td>{{ entity.url }}</td>
+                <td>{{ entity.fetchFrequency }}</td>
                 <td>{% if entity.disabled == true %}true{% else %}false{% endif %}</td>
                 <td>
                     <div class="btn-group pull-right">

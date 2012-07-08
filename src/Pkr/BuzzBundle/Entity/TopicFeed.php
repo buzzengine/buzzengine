@@ -48,6 +48,7 @@ class TopicFeed extends AbstractFeed
             $this->rawFeed = $rawFeed;
             $this->query = $query;
             $this->topic = $query->getTopic();
+            $this->fetchFrequency = $rawFeed->getFetchFrequency();
             $this->disabled = $query->getDisabled();
 
             $this->generateUrl();
