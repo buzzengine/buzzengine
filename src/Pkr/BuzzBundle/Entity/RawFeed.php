@@ -14,10 +14,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RawFeed
 {
-    const FETCH_HOURLY = 'fetch hourly';
-    const FETCH_DAILY = 'fetch daily';
-    const FETCH_WEEKLY = 'fetch weekly';
-    const FETCH_MONTHLY = 'fetch monthly';
+    const FETCH_HOURLY = 'hourly';
+    const FETCH_DAILY = 'daily';
+    const FETCH_WEEKLY = 'weekly';
+    const FETCH_MONTHLY = 'monthly';
 
     const PLACEHOLDER = '*QUERY*';
 
@@ -48,11 +48,11 @@ class RawFeed
     /**
      * @var string $fetchFrequency
      *
-     * @ORM\Column(name="fetchFrequency", type="string", length=30)
+     * @ORM\Column(name="fetchFrequency", type="string", length=10)
      * @Assert\NotBlank()
-     * @Assert\MaxLength(30)
+     * @Assert\MaxLength(10)
      * @Assert\Choice(
-     *      choices = {"fetch hourly", "fetch daily", "fetch weekly", "fetch monthly"},
+     *      choices = {"hourly", "daily", "weekly", "monthly"},
      *      message = "Choose a valid fetch frequency."
      * )
      */

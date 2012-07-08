@@ -213,8 +213,23 @@ class Topic
      *
      * @return ArrayCollection
      */
-    public function getTopicFeeds()
+    public function getTopicFeeds($fetchFrequency = null)
     {
+        if (!is_null ($fetchFrequency))
+        {
+            $closure = function (AbstractFeed $feed) use ($fetchFrequency)
+            {
+                if ($feed->getFetchFrequency() === $fetchFrequency)
+                {
+                    return $feed;
+                }
+
+                return null;
+            };
+
+            return $this->topicFeeds->filter($closure);
+        }
+
         return $this->topicFeeds;
     }
 

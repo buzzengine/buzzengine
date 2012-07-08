@@ -295,17 +295,17 @@ class Feed
         return $filteredUrl;
     }
 
-    public function fetch($id = null)
+    public function fetch($value = null)
     {
         $topicRepository = $this->_entityManager->getRepository('PkrBuzzBundle:Topic');
 
-        if (is_null($id))
+        if (is_numeric($value))
         {
-            $topics = $topicRepository->findAll();
+            $topics = $topicRepository->findById($value);
         }
         else
         {
-            $topics = $topicRepository->findById($id);
+            $topics = $topicRepository->findAll();
         }
 
         foreach ($topics as $topic)
@@ -342,14 +342,20 @@ class Feed
                 }
             }
 
-            foreach ($topic->getTopicFeeds() as $feed)
+            $fetchFrequency = null;
+            if (!(is_null($value) || is_numeric($value)))
+            {
+                $fetchFrequency = $value;
+            }
+
+            foreach ($topic->getTopicFeeds($fetchFrequency) as $feed)
             {
                 $this->_handleFeed($topic, $feed, $filterChain);
             }
 
             foreach ($topic->getCategories() as $category)
             {
-                foreach ($category->getFeeds() as $feed)
+                foreach ($category->getFeeds($fetchFrequency) as $feed)
                 {
                     $this->_handleFeed($topic, $feed, $filterChain);
                 }

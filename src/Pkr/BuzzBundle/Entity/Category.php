@@ -107,8 +107,23 @@ class Category
      *
      * @return ArrayCollection
      */
-    public function getFeeds()
+    public function getFeeds($fetchFrequency = null)
     {
+        if (!is_null ($fetchFrequency))
+        {
+            $closure = function (AbstractFeed $feed) use ($fetchFrequency)
+            {
+                if ($feed->getFetchFrequency() === $fetchFrequency)
+                {
+                    return $feed;
+                }
+
+                return null;
+            };
+
+            return $this->feeds->filter($closure);
+        }
+
         return $this->feeds;
     }
 
