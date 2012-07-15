@@ -163,4 +163,9 @@ class Author
     {
         return $this->topic;
     }
+
+    public function getScore()
+    {
+        return $this->feedEntries->count();
+    }
 }

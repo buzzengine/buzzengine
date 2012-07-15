@@ -160,4 +160,9 @@ class Query
     {
         return $this->feedEntries;
     }
+
+    public function getScore()
+    {
+        return $this->feedEntries->count();
+    }
 }

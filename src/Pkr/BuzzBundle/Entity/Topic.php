@@ -194,8 +194,8 @@ class Topic
 
         uasort($array, function (Query $a, Query $b)
         {
-            $aCount = $a->getFeedEntries()->count();
-            $bCount = $b->getFeedEntries()->count();
+            $aCount = $a->getScore();
+            $bCount = $b->getScore();
 
             if ($aCount == $bCount)
             {
@@ -254,8 +254,8 @@ class Topic
 
         uasort($array, function (Domain $a, Domain $b)
         {
-            $aCount = $a->getFeedEntries()->count();
-            $bCount = $b->getFeedEntries()->count();
+            $aCount = $a->getScore();
+            $bCount = $b->getScore();
 
             if ($aCount == $bCount)
             {
@@ -289,8 +289,8 @@ class Topic
 
         uasort($array, function (Author $a, Author $b)
         {
-            $aCount = $a->getFeedEntries()->count();
-            $bCount = $b->getFeedEntries()->count();
+            $aCount = $a->getScore();
+            $bCount = $b->getScore();
 
             if ($aCount == $bCount)
             {

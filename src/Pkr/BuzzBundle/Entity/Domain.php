@@ -144,4 +144,17 @@ class Domain
     {
         return $this->competeComRank;
     }
+
+    public function getScore()
+    {
+        $feedEntriesScore = $this->feedEntries->count() / 1000000000;
+
+        $competeComScore = 0.5;
+        if (!is_null($this->competeComRank))
+        {
+            $competeComScore = 1 - ($this->competeComRank / 1000000000);
+        }
+
+        return $feedEntriesScore * 0.8 + $competeComScore * 0.2;
+    }
 }

@@ -22,7 +22,7 @@ class FetchRating extends Command
 
         try
         {
-            $ratingService->updateRating();
+            $ratingService->fetch();
         }
         catch (\Exception $e)
         {

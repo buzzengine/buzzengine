@@ -35,7 +35,7 @@ class Rating
         $this->_entityManager->flush($log);
     }
 
-    public function updateRating()
+    public function fetch()
     {
         $domains = $this->_entityManager
                         ->getRepository('PkrBuzzBundle:Domain')
