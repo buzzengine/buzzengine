@@ -7,31 +7,22 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Fetch extends Command
+class FetchRating extends Command
 {
     protected function configure()
     {
-        $this->setName('buzz:fetch')
-             ->setDescription('Fetch feeds via command line')
-             ->addArgument('frequency', InputArgument::OPTIONAL, 'the frequency type');
+        $this->setName('buzz:fetchRating')
+             ->setDescription('Fetch rating scores via command line');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getApplication()->getKernel()->getContainer();
-        $feedService = $container->get('pkr_buzz.service.feed');
+        $ratingService = $container->get('pkr_buzz.service.rating');
 
-        $frequency = $input->getArgument('frequency');
         try
         {
-            if (empty ($frequency))
-            {
-                $feedService->fetch();
-            }
-            else
-            {
-                $feedService->fetch($frequency);
-            }
+            $ratingService->updateRating();
         }
         catch (\Exception $e)
         {

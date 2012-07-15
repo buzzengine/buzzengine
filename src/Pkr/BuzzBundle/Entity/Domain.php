@@ -53,6 +53,13 @@ class Domain
      */
     private $topic;
 
+    /**
+     * @var int $competeComRank
+     *
+     * @ORM\Column(name="competeComRank", type="integer", nullable="true")
+     */
+    private $competeComRank = null;
+
     public function __construct()
     {
         $this->feedEntries = new ArrayCollection();
@@ -116,5 +123,25 @@ class Domain
     public function getTopic()
     {
         return $this->topic;
+    }
+
+    /**
+     * Set competeComRank
+     *
+     * @param int $competeComRank
+     */
+    public function setCompeteComRank($competeComRank)
+    {
+        $this->competeComRank = $competeComRank;
+    }
+
+    /**
+     * Get competeComRank
+     *
+     * @return int
+     */
+    public function getCompeteComRank()
+    {
+        return $this->competeComRank;
     }
 }

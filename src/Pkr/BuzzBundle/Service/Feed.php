@@ -134,10 +134,26 @@ class Feed
                 $feedEntry->setDescription($feedEntryObject->getDescription());
                 $feedEntry->setContent($feedEntryObject->getContent());
 
-                $dateCreated = new \DateTime($feedEntryObject->getDateCreated()->get(Date::W3C));
+                $dateCreated = $feedEntryObject->getDateCreated();
+                if ($dateCreated)
+                {
+                    $dateCreated = new \DateTime($dateCreated->get(Date::W3C));
+                }
+                else
+                {
+                    $dateCreated = new \DateTime();
+                }
                 $feedEntry->setDateCreated($dateCreated);
 
-                $dateModified = new \DateTime($feedEntryObject->getDateModified()->get(Date::W3C));
+                $dateModified = $feedEntryObject->getDateModified();
+                if ($dateModified)
+                {
+                    $dateModified = new \DateTime($dateModified->get(Date::W3C));
+                }
+                else
+                {
+                    $dateModified = $dateCreated;
+                }
                 $feedEntry->setDateModified($dateModified);
 
                 $domain = $this->_getDomain($topic, $feedEntryObject->getPermalink());

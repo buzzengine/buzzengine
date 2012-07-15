@@ -19,11 +19,16 @@
     -->
 
     <parameters>
-        <parameter key="pkr_buzz.service.filter" type="collection">
+        <parameter key="pkr_buzz.service.filterConfig" type="collection">
             <parameter key="language" type="collection">
                 <parameter key="detectlanguageCom" type="collection">
                     <parameter key="apiKey">%filter_language_detectlanguageCom_apiKey%</parameter>
                 </parameter>
+            </parameter>
+        </parameter>
+        <parameter key="pkr_buzz.service.ratingApiConfig" type="collection">
+            <parameter key="competeCom" type="collection">
+                <parameter key="apiKey">%rating_competeCom_apiKey%</parameter>
             </parameter>
         </parameter>
     </parameters>
@@ -32,7 +37,12 @@
         <service id="pkr_buzz.service.feed" class="Pkr\BuzzBundle\Service\Feed">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="validator"/>
-            <argument>%pkr_buzz.service.filter%</argument>
+            <argument>%pkr_buzz.service.filterConfig%</argument>
+        </service>
+        <service id="pkr_buzz.service.rating" class="Pkr\BuzzBundle\Service\Rating">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="validator"/>
+            <argument>%pkr_buzz.service.ratingApiConfig%</argument>
         </service>
     </services>
 </container>
